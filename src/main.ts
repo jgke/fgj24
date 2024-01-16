@@ -1,9 +1,8 @@
 import "./style.css";
-import typescriptLogo from "./typescript.svg";
-import viteLogo from "/vite.svg";
 import { Application, Sprite, Assets } from "pixi.js";
 
-import { initFmod, updateFmod, playEvent, FMOD } from "./fmod";
+import { initFmod, updateFmod, playEvent } from "./fmod";
+import { updateInputState } from "./input";
 
 initFmod();
 
@@ -14,7 +13,7 @@ const app = new Application();
 
 // The application will create a canvas element for you that you
 // can then insert into the DOM
-document.body.appendChild(app.view);
+document.body.appendChild(app.view as any);
 
 // load the texture we need
 const texture = await Assets.load("assets/cat.png");
@@ -41,6 +40,9 @@ app.stage.addChild(bunny);
 // Listen for frame updates
 app.ticker.add((delta) => {
   updateFmod();
+  const inp = updateInputState();
   // each frame we spin the bunny around a bit
   bunny.rotation += 0.01 * delta;
+  bunny.x += inp.moveX * delta;
+  bunny.y += inp.moveY * delta;
 });

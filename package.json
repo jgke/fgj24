@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "tsc": "tsc --noemit",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },

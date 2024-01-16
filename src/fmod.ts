@@ -1,15 +1,15 @@
 import bankUrl from "../assets/fmod/Master.bank?url";
 import bankStringsUrl from "../assets/fmod/Master.strings.bank?url";
 
-var FMOD = {};
+var FMOD: any = {};
 FMOD["preRun"] = prerun;
 FMOD["onRuntimeInitialized"] = main;
 //FMOD['INITIAL_MEMORY'] = 64*1024*1024;
 
 let initted = false;
 
-var bankData = null;
-var bankStringData = null;
+var bankData: null | any = null;
+var bankStringData: null | any = null;
 
 export async function initFmod() {
   if (initted) return;
@@ -20,19 +20,17 @@ export async function initFmod() {
     await (await fetch(bankStringsUrl)).arrayBuffer(),
   );
 
-  FMODModule(FMOD);
+  (window as any).FMODModule(FMOD);
 }
 
-let gSystem;
-let gSystemCore;
+let gSystem: any;
+let gSystemCore: any;
 
-var events = {};
+var events: any = {};
 
-// Boolean to avoid resetting FMOD on IOS/Chrome every time screen is touched.
 let gAudioResumed = false;
 
-// Simple error checking function for all FMOD return values.
-function CHECK_RESULT(result) {
+function CHECK_RESULT(result: any) {
   if (result == FMOD.OK) return;
   var msg = "FMOD error: '" + FMOD.ErrorString(result) + "'";
   console.error(msg);
@@ -42,7 +40,7 @@ function CHECK_RESULT(result) {
 function prerun() {}
 
 function main() {
-  var outval = {};
+  var outval: any = {};
 
   console.log("Initializing FMOD");
 
@@ -60,7 +58,12 @@ function main() {
 
   // 1024 virtual channels
   CHECK_RESULT(
-    gSystem.initialize(1024, FMOD.STUDIO_INIT_NORMAL, FMOD.INIT_NORMAL, null),
+    gSystem.initialize(
+      1024,
+      FMOD.STUDIO_INIT_NORMAL,
+      FMOD.INIT_NORMAL | FMOD.LIVEUPDATE,
+      null,
+    ),
   );
 
   loadBank(bankData);
@@ -80,7 +83,8 @@ function main() {
     }
   }
 
-  var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  var iOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
   if (iOS) {
     window.addEventListener("touchend", resumeAudio, false);
   } else {
@@ -92,12 +96,12 @@ function main() {
 }
 
 // Function called when user presses HTML Play Sound button, with parameter 0, 1 or 2.
-export function playEvent(soundid, ambient) {
+export function playEvent(soundid: string) {
   const descr = events[soundid];
   if (!descr) return;
 
   // One-shot event
-  var eventInstance = {};
+  var eventInstance: any = {};
   CHECK_RESULT(descr.val.createInstance(eventInstance));
   CHECK_RESULT(eventInstance.val.start());
 
@@ -108,10 +112,9 @@ export function playEvent(soundid, ambient) {
    * stop bg music: CHECK_RESULT( eventInstance.val.stop(FMOD.STUDIO_STOP_IMMEDIATE) );
    */
 }
-window.playEvent = playEvent;
 
 // Helper function to load a bank by name.
-function loadBank(data) {
+function loadBank(data: any) {
   var bankInfo = new FMOD.STUDIO_BANK_INFO();
   bankInfo.userdata = data;
   var bankhandle = {};
@@ -126,9 +129,9 @@ function loadBank(data) {
   );
 }
 
-function loadEvent(ev) {
+function loadEvent(ev: any) {
   if (!events[ev]) {
-    const descr = {};
+    const descr: any = {};
     CHECK_RESULT(gSystem.getEvent(ev, descr));
     // Start loading explosion sample data and keep it in memory
     CHECK_RESULT(descr.val.loadSampleData());
