@@ -1,6 +1,5 @@
 import { Assets, Sprite } from "pixi.js";
 import { playEvent } from "./fmod.ts";
-import { InputState } from "./input.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
 export let ship: Sprite;
