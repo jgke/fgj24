@@ -36,11 +36,9 @@ function handleState(state: ButtonClickStates, idx: number, pressed: boolean): [
     }
     return [true, false];
   } else if (state[idx] && Date.now() - state[idx]! < 200) {
-    console.log("Release fast");
     state[idx] = null;
     return [false, true];
   } else if (state[idx]) {
-    console.log("Release slow");
     state[idx] = null;
     return [false, false];
   } else {
@@ -102,11 +100,8 @@ export function updateInputState(): InputState {
   }
 
   {
-    //console.log("before")
-    //console.log(keyboardInputState.a, keyboardButtonStates, isKeyDown("a"), isKeyDown("A"))
     keyboardInputState.a = handleState(keyboardButtonStates, 0, isKeyDown("a") || isKeyDown("A"));
     keyboardInputState.b = handleState(keyboardButtonStates, 1, isKeyDown("b") || isKeyDown("B"));
-    //console.log(keyboardInputState.a, keyboardButtonStates, isKeyDown("a"), isKeyDown("A"))
     if (isKeyDown("ArrowUp")) {
       keyboardInputState.moveY = -1;
     }

@@ -1,5 +1,5 @@
 import "./style.css";
-import { Application, Assets } from "pixi.js";
+import {Application, Assets, Sprite} from "pixi.js";
 
 import { initFmod, updateFmod } from "./fmod";
 import { defaultInputState, updateInputState } from "./input";
@@ -20,17 +20,26 @@ async function init() {
   await fmodPromise;
   document.getElementById("app")!.appendChild(app.view as any);
 
+  const bgAsset = await Assets.load("assets/bg1.png");
   const catAsset = await Assets.load("assets/cat.png");
   const treatAsset = await Assets.load("assets/cat.png");
+
+  const bg = new Sprite(bgAsset);
+  bg.x = 0;
+  bg.y = -bg.height + gameHeight;
+  app.stage.addChild(bg);
 
   await ship.init();
   const cats: { [key: number]: Cat } = {};
   let catId = 0;
   const treats: { [key: number]: Treat } = {};
   let treatId = 0;
+  let previousTreat = 0;
 
   // Listen for frame updates
   app.ticker.add((delta) => {
+    bg.y += delta * 0.9;
+    if(bg.y > 0) bg.y = 0;
     window.delta = delta;
     updateFmod();
     inp = updateInputState();
@@ -45,7 +54,8 @@ async function init() {
       }
     }
 
-    if (inp.b[1]) {
+    if (inp.b[0] && previousTreat + 100 < Date.now()) {
+      previousTreat = Date.now();
       treats[treatId++] = treat.init(treatAsset, center(ship.ship));
     }
     for (let treatsKey in treats) {
