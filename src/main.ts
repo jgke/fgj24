@@ -1,5 +1,5 @@
 import "./style.css";
-import { Application, Assets, Point, Sprite } from "pixi.js";
+import { Application, Assets, Sprite } from "pixi.js";
 
 import { initFmod, updateFmod } from "./fmod";
 import { defaultInputState, updateInputState } from "./input";
@@ -7,13 +7,20 @@ import { gameHeight, gameWidth } from "./const.ts";
 import * as ship from "./ship.ts";
 import * as cat from "./cat.ts";
 import * as treat from "./treat.ts";
-import { Cat, CatRoute, updateCat, wobblyLine } from "./cat.ts";
+import { Cat, CatRoute, updateCat } from "./cat.ts";
 import { Treat, updateTreat } from "./treat.ts";
 import { center } from "./util.ts";
+import { level1 } from "./level.ts";
+import { initTreatCount, updateTreatCount } from "./treatCount.ts";
 
 const fmodPromise = initFmod().then(() => console.log("FMOD initialized"));
 
-type LevelEvent = [number, () => void];
+const cats: { [key: number]: Cat } = {};
+let catId = 0;
+const treats: { [key: number]: Treat } = {};
+let treatId = 0;
+let previousTreat = 0;
+let treatCount = 3;
 
 async function init() {
   window.inp = defaultInputState;
@@ -22,29 +29,15 @@ async function init() {
   await fmodPromise;
   document.getElementById("app")!.appendChild(app.view as any);
 
-  const cats: { [key: number]: Cat } = {};
-  let catId = 0;
-  const treats: { [key: number]: Treat } = {};
-  let treatId = 0;
-  let previousTreat = 0;
-
-  const waveOf5 = (offset: number, from: Point, to: Point): LevelEvent[] => [
-    [offset, () => newCat(wobblyLine(from, to))],
-    [offset + 500, () => newCat(wobblyLine(from, to))],
-    [offset + 1000, () => newCat(wobblyLine(from, to))],
-    [offset + 1500, () => newCat(wobblyLine(from, to))],
-    [offset + 2000, () => newCat(wobblyLine(from, to))],
-  ];
-
-  const newCat = (route: CatRoute) => (cats[catId++] = cat.init(catAsset, route));
+  window.catFactory = (route: CatRoute) => (cats[catId++] = cat.init(catAsset, route));
 
   const bgAsset = await Assets.load("assets/bg1.png");
+  const shipAsset = await Assets.load("assets/cat.png");
   const catAsset = await Assets.load("assets/cat.png");
   const treatAsset = await Assets.load("assets/cat.png");
-  const level: LevelEvent[] = [
-    ...waveOf5(1000, new Point(0, 100), new Point(400, 100)),
-    ...waveOf5(4000, new Point(400, 200), new Point(0, 200)),
-  ];
+  const treatIconAsset = await Assets.load("assets/cat.png");
+
+  const level = level1;
   let nextEvent = 0;
 
   const bg = new Sprite(bgAsset);
@@ -52,23 +45,31 @@ async function init() {
   bg.y = -bg.height + gameHeight;
   app.stage.addChild(bg);
 
-  await ship.init();
+  ship.init(shipAsset);
+  initTreatCount(treatIconAsset);
 
   const startTime = Date.now();
 
   // Listen for frame updates
   app.ticker.add((delta) => {
+    updateFmod();
     window.tick = Date.now() - startTime;
+    window.delta = delta;
+    window.inp = updateInputState();
+
     while (nextEvent < level.length && level[nextEvent][0] < tick) {
       level[nextEvent][1]();
       nextEvent++;
     }
 
+    treatCount += delta / 20;
+    if (treatCount > 10) treatCount = 10;
+
+    updateTreatCount(treatCount);
+
     bg.y += delta * 0.9;
     if (bg.y > 0) bg.y = 0;
-    window.delta = delta;
-    updateFmod();
-    inp = updateInputState();
+
     ship.updateShip();
 
     for (let catsKey in cats) {
@@ -77,9 +78,10 @@ async function init() {
       }
     }
 
-    if (inp.b[0] && previousTreat + 100 < Date.now()) {
+    if (inp.b[0] && previousTreat + 100 < Date.now() && treatCount > 0) {
       previousTreat = Date.now();
       treats[treatId++] = treat.init(treatAsset, center(ship.ship));
+      treatCount -= 1;
     }
     for (let treatsKey in treats) {
       if (updateTreat(treats[treatsKey])) {

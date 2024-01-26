@@ -1,11 +1,10 @@
-import { Assets, Sprite } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
 export let ship: Sprite;
 
-export async function init() {
-  const texture = await Assets.load("assets/cat.png");
+export function init(texture: Texture) {
   ship = new Sprite(texture);
   ship.x = app.renderer.width / 2;
   ship.y = app.renderer.height / 2;

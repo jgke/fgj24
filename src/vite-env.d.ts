@@ -2,6 +2,7 @@
 
 import { Application } from "pixi.js";
 import { InputState } from "./input.ts";
+import { CatRoute } from "./cat.ts";
 
 declare global {
   // noinspection ES6ConvertVarToLetConst
@@ -9,4 +10,6 @@ declare global {
   var inp: InputState;
   var delta: number;
   var tick: number;
+
+  var catFactory: (route: CatRoute) => void;
 }
