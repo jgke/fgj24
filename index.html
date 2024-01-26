@@ -5,10 +5,37 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
+    <%- injectFmod %>
   </head>
-  <body>
+  <body class="flex justify-center items-center">
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-    <script type="text/javascript" src="/vendor/fmod/fmodstudioL.js"></script>
+    <div id="loader" class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl">
+      <h1 class="text-4xl font-bold underline">FGJ24</h1>
+      <p class="sr-only">The interactive content is probably not accessible.</p>
+      <button id="start-playing" class="mt-10 p-2 border rounded bg-gray-200">Start playing</button>
+
+      <div class="mt-10">
+        <h2 class="font-bold text-4xl">This game has been created with the following technologies</h2>
+
+        <div class="flex">
+          <a href="https://pixijs.com/">
+            <img class="w-40 h-40 bg-black" src="./assets/pixijs-logo.svg" alt="PixiJS logo" />
+          </a>
+          <p class="ml-4 font-bold">Game Engine: PixiJS</p>
+        </div>
+
+        <div class="flex mt-2">
+          <a href="https://fmod.com/">
+            <img class="w-40 h-40 bg-black" src="./assets/fmod-logo.svg" alt="FMOD logo" />
+          </a>
+          <p class="ml-4 font-bold">
+            <span class="whitespace-nowrap">Audio Engine: FMOD Studio</span><br />
+            <span class="whitespace-nowrap">by Firelight Technologies Pty Ltd.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
   </body>
 </html>

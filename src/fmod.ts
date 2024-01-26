@@ -1,24 +1,22 @@
 import bankUrl from "../assets/fmod/Master.bank?url";
 import bankStringsUrl from "../assets/fmod/Master.strings.bank?url";
 
-var FMOD: any = {};
-FMOD["preRun"] = prerun;
+const FMOD: any = {};
+FMOD["preRun"] = preInitialize;
 FMOD["onRuntimeInitialized"] = main;
 //FMOD['INITIAL_MEMORY'] = 64*1024*1024;
 
-let initted = false;
+let initialized = false;
 
-var bankData: null | any = null;
-var bankStringData: null | any = null;
+let bankData: null | any = null;
+let bankStringData: null | any = null;
 
 export async function initFmod() {
-  if (initted) return;
-  initted = true;
+  if (initialized) return;
+  initialized = true;
 
   bankData = new Uint8Array(await (await fetch(bankUrl)).arrayBuffer());
-  bankStringData = new Uint8Array(
-    await (await fetch(bankStringsUrl)).arrayBuffer(),
-  );
+  bankStringData = new Uint8Array(await (await fetch(bankStringsUrl)).arrayBuffer());
 
   (window as any).FMODModule(FMOD);
 }
@@ -26,52 +24,43 @@ export async function initFmod() {
 let gSystem: any;
 let gSystemCore: any;
 
-var events: any = {};
+const events: any = {};
 
 let gAudioResumed = false;
 
 function CHECK_RESULT(result: any) {
   if (result == FMOD.OK) return;
-  var msg = "FMOD error: '" + FMOD.ErrorString(result) + "'";
+  const msg = "FMOD error: '" + FMOD.ErrorString(result) + "'";
   console.error(msg);
   throw msg;
 }
 
-function prerun() {}
+function preInitialize() {}
 
 function main() {
-  var outval: any = {};
+  const out: any = {};
 
   console.log("Initializing FMOD");
 
-  CHECK_RESULT(FMOD.Studio_System_Create(outval));
-  gSystem = outval.val;
-  CHECK_RESULT(gSystem.getCoreSystem(outval));
-  gSystemCore = outval.val;
+  CHECK_RESULT(FMOD.Studio_System_Create(out));
+  gSystem = out.val;
+  CHECK_RESULT(gSystem.getCoreSystem(out));
+  gSystemCore = out.val;
 
   CHECK_RESULT(gSystemCore.setDSPBufferSize(2048, 2));
 
-  CHECK_RESULT(gSystemCore.getDriverInfo(0, null, null, outval, null, null));
-  CHECK_RESULT(
-    gSystemCore.setSoftwareFormat(outval.val, FMOD.SPEAKERMODE_DEFAULT, 0),
-  );
+  CHECK_RESULT(gSystemCore.getDriverInfo(0, null, null, out, null, null));
+  CHECK_RESULT(gSystemCore.setSoftwareFormat(out.val, FMOD.SPEAKERMODE_DEFAULT, 0));
 
   // 1024 virtual channels
-  CHECK_RESULT(
-    gSystem.initialize(
-      1024,
-      FMOD.STUDIO_INIT_NORMAL,
-      FMOD.INIT_NORMAL | FMOD.LIVEUPDATE,
-      null,
-    ),
-  );
+  CHECK_RESULT(gSystem.initialize(1024, FMOD.STUDIO_INIT_NORMAL, FMOD.INIT_NORMAL | FMOD.LIVEUPDATE, null));
 
   loadBank(bankData);
   loadBank(bankStringData);
 
   loadEvent("event:/meow");
 
-  // Set up iOS/Chrome workaround.  Webaudio is not allowed to start unless screen is touched or button is clicked.
+  // Set up iOS/Chrome workaround. WebAudio is not allowed to start unless screen is touched or button is clicked.
   function resumeAudio() {
     if (!gAudioResumed) {
       console.log("Resetting audio driver based on user input.");
@@ -83,8 +72,7 @@ function main() {
     }
   }
 
-  var iOS =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
   if (iOS) {
     window.addEventListener("touchend", resumeAudio, false);
   } else {
@@ -95,17 +83,13 @@ function main() {
   return FMOD.OK;
 }
 
-// Function called when user presses HTML Play Sound button, with parameter 0, 1 or 2.
-export function playEvent(soundid: string) {
-  const descr = events[soundid];
+export function playEvent(soundId: string) {
+  const descr = events[soundId];
   if (!descr) return;
 
-  // One-shot event
-  var eventInstance: any = {};
+  const eventInstance: any = {};
   CHECK_RESULT(descr.val.createInstance(eventInstance));
   CHECK_RESULT(eventInstance.val.start());
-
-  // Release will clean up the instance when it completes
   CHECK_RESULT(eventInstance.val.release());
 
   /* start bg music: CHECK_RESULT( eventInstance.val.start() );
@@ -113,19 +97,12 @@ export function playEvent(soundid: string) {
    */
 }
 
-// Helper function to load a bank by name.
 function loadBank(data: any) {
-  var bankInfo = new FMOD.STUDIO_BANK_INFO();
+  const bankInfo = new FMOD.STUDIO_BANK_INFO();
   bankInfo.userdata = data;
-  var bankhandle = {};
+  const bankHandle = {};
   CHECK_RESULT(
-    gSystem.loadBankMemory(
-      data,
-      data.length,
-      FMOD.STUDIO_LOAD_MEMORY,
-      FMOD.STUDIO_LOAD_BANK_NORMAL,
-      bankhandle,
-    ),
+    gSystem.loadBankMemory(data, data.length, FMOD.STUDIO_LOAD_MEMORY, FMOD.STUDIO_LOAD_BANK_NORMAL, bankHandle),
   );
 }
 
@@ -139,8 +116,6 @@ function loadEvent(ev: any) {
   }
 }
 
-// Called from main, on an interval that updates at a regular rate (like in a game loop).
-// Prints out information, about the system, and importantly calles System::udpate().
 export function updateFmod() {
   if (!gSystemCore || !gSystem) return;
   const result = gSystem.update();

@@ -4,17 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --config vite.config.js",
     "tsc": "tsc --noemit",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "NODE_ENV=production tsc && vite build --config vite.config.js && rsync -rv --exclude assets/fmod assets dist/ && mkdir -p dist/vendor/fmod && rsync vendor/fmod/fmodstudio.* dist/vendor/fmod/",
+    "preview": "vite --config vite.config.js preview"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vite-plugin-html": "^3.2.2"
   },
   "dependencies": {
     "pixi.js": "^7.3.3"

@@ -46,29 +46,37 @@ function handleState(idx: number, pressed: boolean): [boolean, boolean] {
 }
 
 function pressed(gp: Gamepad, idx: number): boolean {
-  return gp.buttons[idx].value > 0 || gp.buttons[idx].pressed;
+  return gp?.buttons?.[idx]?.value > 0 || gp?.buttons?.[idx]?.pressed;
 }
 
-function reduce(a: InputState, b: InputState): InputState {
-  if (!b) return a;
+function reduce(a: InputState | null, b: InputState | null): InputState {
+  if (a && b)
+    return {
+      moveX: a.moveX || b.moveX || 0,
+      moveY: a.moveY || b.moveY || 0,
+      a: (a.a[0] || a.a[1] ? a.a : b.a) || [false, false],
+      b: (a.b[0] || a.b[1] ? a.b : b.b) || [false, false],
+    };
+  if (a) return a;
+  if (b) return b;
+  return structuredClone(defaultInputState);
+}
+
+function absMax(a: number, b: number): number {
+  if (!a && !b) return 0;
   if (!a) return b;
-  return {
-    moveX: a.moveX || b.moveX || 0,
-    moveY: a.moveY || b.moveY || 0,
-    a: (a.a[0] || a.a[1] ? a.a : b.a) || [false, false],
-    b: (a.b[0] || a.b[1] ? a.b : b.b) || [false, false],
-  };
+  if (!b) return a;
+  return Math.abs(a) > Math.abs(b) ? a : b;
 }
 
 export function updateInputState(): InputState {
   for (const gp of navigator.getGamepads()) {
     if (gp) {
-      if (!gpInputStates[gp.index])
-        gpInputStates[gp.index] = structuredClone(defaultInputState);
+      if (!gpInputStates[gp.index]) gpInputStates[gp.index] = structuredClone(defaultInputState);
       gpInputStates[gp.index].a = handleState(0, pressed(gp, 0));
       gpInputStates[gp.index].b = handleState(1, pressed(gp, 1));
-      gpInputStates[gp.index].moveY = gp.axes[1];
-      gpInputStates[gp.index].moveX = gp.axes[0];
+      gpInputStates[gp.index].moveY = absMax(gp.axes[1], gp.axes[7]);
+      gpInputStates[gp.index].moveX = absMax(gp.axes[0], gp.axes[6]);
       if (pressed(gp, 12)) {
         gpInputStates[gp.index].moveY = -1;
       }
@@ -105,8 +113,5 @@ export function updateInputState(): InputState {
     }
   }
 
-  return reduce(
-    keyboardInputState,
-    Object.values(gpInputStates).reduce(reduce, null),
-  );
+  return reduce(keyboardInputState, Object.values(gpInputStates).reduce(reduce, null));
 }

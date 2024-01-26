@@ -22,5 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# FMOD user directories
 fmod/.user
 fmod/.cache
