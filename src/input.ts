@@ -1,4 +1,4 @@
-interface InputState {
+export interface InputState {
   moveX: number;
   moveY: number;
   a: [boolean, boolean];
