@@ -5,8 +5,8 @@ import { initFmod, updateFmod } from "./fmod";
 import { defaultInputState, updateInputState } from "./input";
 import { gameHeight, gameWidth } from "./const.ts";
 import * as ship from "./ship.ts";
-import * as cats from "./cat.ts";
-import { updateCat } from "./cat.ts";
+import * as cat from "./cat.ts";
+import { Cat, updateCat } from "./cat.ts";
 
 const fmodPromise = initFmod().then(() => console.log("FMOD initialized"));
 
@@ -20,7 +20,8 @@ async function init() {
   const catAsset = await Assets.load("assets/cat.png");
 
   await ship.init();
-  let cat: cats.Cat | null = null;
+  const cats: { [key: number]: Cat } = {};
+  let catId = 0;
 
   // Listen for frame updates
   app.ticker.add((delta) => {
@@ -29,13 +30,12 @@ async function init() {
     inp = updateInputState();
     ship.updateShip();
 
-    if (!cat && inp.a[1]) {
-      cat = cats.init(catAsset);
+    if (inp.a[1]) {
+      cats[catId++] = cat.init(catAsset);
     }
-    if (cat) {
-      if (updateCat(cat)) {
-        console.log("rip cat");
-        cat = null;
+    for (let catsKey in cats) {
+      if (updateCat(cats[catsKey])) {
+        delete cats[catsKey];
       }
     }
   });
