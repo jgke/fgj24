@@ -1,4 +1,4 @@
-import { Point, Sprite } from "pixi.js";
+import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 
 export interface Cat {
@@ -7,7 +7,7 @@ export interface Cat {
   route: [Point, Point];
 }
 
-export function init(texture: any): Cat {
+export function init(texture: Texture): Cat {
   const cat = new Sprite(texture);
   cat.x = app.renderer.width / 2;
   cat.y = app.renderer.height / 2;

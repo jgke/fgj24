@@ -6,7 +6,10 @@ import { defaultInputState, updateInputState } from "./input";
 import { gameHeight, gameWidth } from "./const.ts";
 import * as ship from "./ship.ts";
 import * as cat from "./cat.ts";
+import * as treat from "./treat.ts";
 import { Cat, updateCat } from "./cat.ts";
+import { Treat, updateTreat } from "./treat.ts";
+import { center } from "./util.ts";
 
 const fmodPromise = initFmod().then(() => console.log("FMOD initialized"));
 
@@ -18,10 +21,13 @@ async function init() {
   document.getElementById("app")!.appendChild(app.view as any);
 
   const catAsset = await Assets.load("assets/cat.png");
+  const treatAsset = await Assets.load("assets/cat.png");
 
   await ship.init();
   const cats: { [key: number]: Cat } = {};
   let catId = 0;
+  const treats: { [key: number]: Treat } = {};
+  let treatId = 0;
 
   // Listen for frame updates
   app.ticker.add((delta) => {
@@ -36,6 +42,29 @@ async function init() {
     for (let catsKey in cats) {
       if (updateCat(cats[catsKey])) {
         delete cats[catsKey];
+      }
+    }
+
+    if (inp.b[1]) {
+      treats[treatId++] = treat.init(treatAsset, center(ship.ship));
+    }
+    for (let treatsKey in treats) {
+      if (updateTreat(treats[treatsKey])) {
+        delete treats[treatsKey];
+      }
+    }
+
+    // advanced collision checking logic, highly optimized
+    for (let treatsKey in treats) {
+      const treatRect = treats[treatsKey].sprite.getBounds();
+      for (let catsKey in cats) {
+        if (cats[catsKey].sprite.getBounds().intersects(treatRect)) {
+          app.stage.removeChild(cats[catsKey].sprite);
+          app.stage.removeChild(treats[treatsKey].sprite);
+          delete cats[catsKey];
+          delete treats[treatsKey];
+          break;
+        }
       }
     }
   });

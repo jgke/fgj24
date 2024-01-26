@@ -37,11 +37,11 @@ function handleState(state: ButtonClickStates, idx: number, pressed: boolean): [
     return [true, false];
   } else if (state[idx] && Date.now() - state[idx]! < 200) {
     console.log("Release fast");
-    state[0] = null;
+    state[idx] = null;
     return [false, true];
   } else if (state[idx]) {
     console.log("Release slow");
-    state[0] = null;
+    state[idx] = null;
     return [false, false];
   } else {
     return [false, false];
