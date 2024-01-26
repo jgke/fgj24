@@ -24,7 +24,7 @@ export async function init() {
   app.stage.addChild(ship);
 }
 
-export function updateShip(delta: number, inp: InputState) {
+export function updateShip() {
   const speed = 10;
   ship.x += speed * inp.moveX * delta;
   ship.y += speed * inp.moveY * delta;

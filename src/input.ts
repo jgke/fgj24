@@ -6,7 +6,7 @@ export interface InputState {
 }
 
 const buttonClickStates: { [key: number]: number } = {};
-const defaultInputState: InputState = {
+export const defaultInputState: InputState = {
   moveX: 0,
   moveY: 0,
   a: [false, false],
