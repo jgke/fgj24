@@ -5,7 +5,7 @@ export interface InputState {
   b: [boolean, boolean];
 }
 
-const buttonClickStates: { [key: number]: number } = {};
+type ButtonClickStates = { [key: number]: number | null };
 export const defaultInputState: InputState = {
   moveX: 0,
   moveY: 0,
@@ -29,17 +29,20 @@ const isKeyDown = (() => {
   return (key: any) => (state.hasOwnProperty(key) && state[key]) || false;
 })();
 
-function handleState(idx: number, pressed: boolean): [boolean, boolean] {
+function handleState(state: ButtonClickStates, idx: number, pressed: boolean): [boolean, boolean] {
   if (pressed) {
-    if (!buttonClickStates[idx]) {
-      buttonClickStates[idx] = 1;
-    } else {
-      buttonClickStates[idx] += 1;
+    if (!state[idx]) {
+      state[idx] = Date.now();
     }
     return [true, false];
-  } else if (buttonClickStates[idx] && buttonClickStates[idx] < 200) {
-    buttonClickStates[0] = 0;
+  } else if (state[idx] && Date.now() - state[idx]! < 200) {
+    console.log("Release fast");
+    state[0] = null;
     return [false, true];
+  } else if (state[idx]) {
+    console.log("Release slow");
+    state[0] = null;
+    return [false, false];
   } else {
     return [false, false];
   }
@@ -69,12 +72,18 @@ function absMax(a: number, b: number): number {
   return Math.abs(a) > Math.abs(b) ? a : b;
 }
 
+let gpButtonStates: { [index: number]: ButtonClickStates } = {};
+let keyboardButtonStates: ButtonClickStates = {};
+
 export function updateInputState(): InputState {
   for (const gp of navigator.getGamepads()) {
     if (gp) {
-      if (!gpInputStates[gp.index]) gpInputStates[gp.index] = structuredClone(defaultInputState);
-      gpInputStates[gp.index].a = handleState(0, pressed(gp, 0));
-      gpInputStates[gp.index].b = handleState(1, pressed(gp, 1));
+      if (!gpInputStates[gp.index]) {
+        gpInputStates[gp.index] = structuredClone(defaultInputState);
+        gpButtonStates[gp.index] = {};
+      }
+      gpInputStates[gp.index].a = handleState(gpButtonStates[gp.index], 0, pressed(gp, 0));
+      gpInputStates[gp.index].b = handleState(gpButtonStates[gp.index], 1, pressed(gp, 1));
       gpInputStates[gp.index].moveY = absMax(gp.axes[1], gp.axes[7]);
       gpInputStates[gp.index].moveX = absMax(gp.axes[0], gp.axes[6]);
       if (pressed(gp, 12)) {
@@ -93,6 +102,11 @@ export function updateInputState(): InputState {
   }
 
   {
+    //console.log("before")
+    //console.log(keyboardInputState.a, keyboardButtonStates, isKeyDown("a"), isKeyDown("A"))
+    keyboardInputState.a = handleState(keyboardButtonStates, 0, isKeyDown("a") || isKeyDown("A"));
+    keyboardInputState.b = handleState(keyboardButtonStates, 1, isKeyDown("b") || isKeyDown("B"));
+    //console.log(keyboardInputState.a, keyboardButtonStates, isKeyDown("a"), isKeyDown("A"))
     if (isKeyDown("ArrowUp")) {
       keyboardInputState.moveY = -1;
     }

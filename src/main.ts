@@ -1,10 +1,12 @@
 import "./style.css";
-import { Application } from "pixi.js";
+import { Application, Assets } from "pixi.js";
 
 import { initFmod, updateFmod } from "./fmod";
 import { defaultInputState, updateInputState } from "./input";
 import { gameHeight, gameWidth } from "./const.ts";
 import * as ship from "./ship.ts";
+import * as cats from "./cat.ts";
+import { updateCat } from "./cat.ts";
 
 const fmodPromise = initFmod().then(() => console.log("FMOD initialized"));
 
@@ -15,7 +17,10 @@ async function init() {
   await fmodPromise;
   document.getElementById("app")!.appendChild(app.view as any);
 
+  const catAsset = await Assets.load("assets/cat.png");
+
   await ship.init();
+  let cat: cats.Cat | null = null;
 
   // Listen for frame updates
   app.ticker.add((delta) => {
@@ -23,6 +28,16 @@ async function init() {
     updateFmod();
     inp = updateInputState();
     ship.updateShip();
+
+    if (!cat && inp.a[1]) {
+      cat = cats.init(catAsset);
+    }
+    if (cat) {
+      if (updateCat(cat)) {
+        console.log("rip cat");
+        cat = null;
+      }
+    }
   });
 }
 document.getElementById("start-playing")!.addEventListener("click", () => {
