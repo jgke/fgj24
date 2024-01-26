@@ -20,6 +20,7 @@ let catId = 0;
 const treats: { [key: number]: Treat } = {};
 let treatId = 0;
 let previousTreat = 0;
+let maxTreatCount = 3;
 let treatCount = 3;
 
 async function init() {
@@ -63,7 +64,7 @@ async function init() {
     }
 
     treatCount += delta / 20;
-    if (treatCount > 10) treatCount = 10;
+    if (treatCount > maxTreatCount) treatCount = maxTreatCount;
 
     updateTreatCount(treatCount);
 

@@ -101,7 +101,7 @@ export function updateInputState(): InputState {
 
   {
     keyboardInputState.a = handleState(keyboardButtonStates, 0, isKeyDown("a") || isKeyDown("A"));
-    keyboardInputState.b = handleState(keyboardButtonStates, 1, isKeyDown("b") || isKeyDown("B"));
+    keyboardInputState.b = handleState(keyboardButtonStates, 1, isKeyDown(" "));
     if (isKeyDown("ArrowUp")) {
       keyboardInputState.moveY = -1;
     }
