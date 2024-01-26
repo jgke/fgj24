@@ -8,4 +8,5 @@ declare global {
   var app: Application;
   var inp: InputState;
   var delta: number;
+  var tick: number;
 }
