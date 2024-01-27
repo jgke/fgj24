@@ -56,6 +56,15 @@ async function init() {
   }
   app.ticker.add((delta) => tickerFn(delta));
   preInitLevel(level1);
+
+  // preload assets
+  Promise.all([
+    Assets.load("assets/Lvl1.png"),
+    Assets.load("assets/Hand.png"),
+    Assets.load("assets/Basic.png"),
+    Assets.load("assets/Treat Projectile.png"),
+    Assets.load("assets/Treat Magazine.png"),
+  ]).then((n) => console.log("Preloaded assets count =", n.length));
 }
 
 function preInitLevel(level: Level) {

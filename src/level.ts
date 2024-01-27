@@ -38,13 +38,13 @@ const level1Events: LevelEvent[] = [
   ...waveOf5(6000, new Point(gameWidth, 200), new Point(0, 200)),
 
   ...times5(8000, () =>
-    catFactory(bezier(new Point(0, 200), new Point(150, 0), new Point(gameWidth, 300), new Point(0, gameHeight))),
+    catFactory(bezier(new Point(0, 200), new Point(350, 0), new Point(gameWidth, 300), new Point(0, gameHeight))),
   ),
-  ...times5(8000, () =>
+  ...times5(8250, () =>
     catFactory(
       bezier(
         new Point(gameWidth, 200),
-        new Point(gameWidth - 150, 0),
+        new Point(gameWidth - 350, 0),
         new Point(0, 300),
         new Point(gameWidth, gameHeight),
       ),
