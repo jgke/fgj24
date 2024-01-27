@@ -7,7 +7,7 @@ export let ship: Sprite;
 export function init(texture: Texture) {
   ship = new Sprite(texture);
   ship.x = app.renderer.width / 2;
-  ship.y = app.renderer.height / 2;
+  ship.y = app.renderer.height + ship.height;
 
   ship.on("pointerdown", () => {
     playEvent("event:/meow");
