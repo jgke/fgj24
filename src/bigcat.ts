@@ -36,7 +36,7 @@ export function initBigcat(texture: Texture): BigCat {
   // Add the bunny to the scene we are building
   stage.addChild(bigcat);
 
-  return { health: 200, sprite: bigcat, routeDelta: 0, attackIndex: null, speed: 1, getPosition: initialRoute };
+  return { health: 10, sprite: bigcat, routeDelta: 0, attackIndex: null, speed: 1, getPosition: initialRoute };
 }
 
 function fade(delta: number, cat: BigCat): Point {

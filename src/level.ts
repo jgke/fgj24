@@ -33,9 +33,9 @@ const level1Story = `
   <p class="mt-2">You can see how many band-aids you have left in the top right corner.
   If you run out of band-aids, you have to stop feeding the cats!
   Can't get blood everywhere. This level is suitable for the whole family after all! </p>
+`;
 
-  <h1 class="font-bold text-4xl">Muffe pls maek new level!</h1>
-
+const level2Story = `
   <h2 class="font-bold text-4xl">Hunky Bulky Big Toms, Lumbering Chonkers and Zoomie Goblins</h2>
 
   <p>Different kinds of cats take different amounts of treats to be satiated. 
@@ -43,7 +43,9 @@ const level1Story = `
   Don't feed the white Lumbering Chonkers! They're very slow, and they don't need to get slower.
   If you feed a Chonker, you lose a band-aid. It makes sense, I swear.
   The solid orange Zoomie Goblins move faster but take less treats to be satiated.</p>
+`;
 
+const level3Story = `
   <h2 class="font-bold text-4xl">Masters of the Universe!</h2>
 
   <p>We all know cats are the real bosses on earth. 
@@ -53,7 +55,9 @@ const level1Story = `
   The Spotted Hissy Fits run straight towards you! Luckily they only take one treat to be satiated.
   Ceilingcats peek from the fabric of reality itself for only a few seconds!
   Feed them before they disappear again!</p>
+`;
 
+export const endingStory = `
   <h2 class="font-bold text-4xl">Galactic Medal of Honor!</h2>
 
   <p>Gud hooman! U'z got a medul for ur meritus servis! thx!
@@ -119,4 +123,10 @@ const level1Events: LevelEvent[] = [
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 
+// todo
+const level2Events = level1Events;
+const level3Events = level1Events;
+
 export const level1: Level = { title: "Level 1", story: level1Story, events: level1Events };
+export const level2: Level = { title: "Level 2", story: level2Story, events: level2Events };
+export const level3: Level = { title: "Level 3", story: level3Story, events: level3Events };

@@ -9,7 +9,7 @@ import * as treat from "./treat.ts";
 import { Cat, CatAssets, CatRoute, updateCat } from "./cat.ts";
 import { Treat, updateTreat } from "./treat.ts";
 import { center, pixelPerfectScale, range } from "./util.ts";
-import { Level, level1 } from "./level.ts";
+import { endingStory, Level, level1, level2, level3 } from "./level.ts";
 import { initTreatCount, updateTreatCount } from "./treatCount.ts";
 import { initShip, updateShip } from "./ship.ts";
 import { initHealthCount, updateHealthIcons } from "./healthCount.ts";
@@ -33,6 +33,8 @@ let feedTimer = 0;
 let feedSpeedCount = 0;
 let feedUnhitCount = 0;
 const speedStreakTreshold = 5000; // ms
+
+let currentLevel = 1;
 
 const speedStreaks: [number, string][] = [
   [2, "Double Kill"],
@@ -130,6 +132,9 @@ function preInitLevel(level: Level) {
 
   document.getElementById("story-title")!.innerHTML = level.title;
   document.getElementById("story-content")!.innerHTML = level.story;
+  setTimeout(() => {
+    document.getElementById("story-content")!.scrollTop = 0;
+  }, 0);
   document.getElementById("story")!.style.display = "";
   document.getElementById("start-level")!.addEventListener("click", () => {
     playEvent("event:/meow");
@@ -233,6 +238,16 @@ async function initLevel(level: Level) {
             playEvent("event:/meow");
             stage.removeChild(bigCat.sprite);
             bigCat = null;
+            if (currentLevel === 1) {
+              preInitLevel(level2);
+            } else if (currentLevel === 2) {
+              preInitLevel(level3);
+            } else if (currentLevel === 3) {
+              {
+                // ending?
+                console.warn(endingStory);
+              }
+            }
           }
           stage.removeChild(treats[treatsKey].sprite);
           delete treats[treatsKey];
