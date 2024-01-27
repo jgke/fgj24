@@ -20,15 +20,57 @@ export function waveOf5(offset: number, ty: keyof CatAssets, from: Point, to: Po
 }
 
 const level1Story = `
-  <h2 class="font-bold text-4xl">Jani please add story</h2>
+  <h2 class="font-bold text-4xl">Hungry Cattos!</h2>
 
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-  magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat.</p>
+  <p>The cats are hungry! move your hand with the arrow keys. Throw treats with the space bar. 
+  Don't let the cats hit you! They're not very nice when they're this hungry.</p>
 
-  <p class="mt-2">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-  pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-  laborum.</p>
+  <p class="mt-2">Cats leave you alone and disappear when they're satiated.
+  You can only throw treats if you have treats in your hand!
+  You can see how many treats are in your hand in the top left corner.
+  You constantly pick new treats from your pocket with your other hand.</p>
+
+  <p class="mt-2">You can see how many band-aids you have left in the top right corner.
+  If you run out of band-aids, you have to stop feeding the cats!
+  Can't get blood everywhere. This level is suitable for the whole family after all! </p>
+
+  <h1 class="font-bold text-4xl">Muffe pls maek new level!</h1>
+
+  <h2 class="font-bold text-4xl">Hunky Bulky Big Toms, Lumbering Chonkers and Zoomie Goblins</h2>
+
+  <p>Different kinds of cats take different amounts of treats to be satiated. 
+  The grey Hunky Bulky Big Toms are a bit slower, but take more treats to be satiated.
+  Don't feed the Lumbering Chonkers! They're very slow, and they don't need to get slower.
+  If you feed a Chonker, you lose a band-aid. It makes sense, I swear.
+  Zoomie Goblins move faster but take less treats to be satiated.</p>
+
+  <h2 class="font-bold text-4xl">Masters of the Universe!</h2>
+
+  <p>We all know cats are the real bosses on earth. 
+  Not much of a stretch to find yout they rule the galaxy and the entire universe, too, right?</p>
+
+  <p class="mt-2">New cats!
+  The Spotted Hissy Fits run straight towards you! Luckily they only take one treat to be satiated.
+  Ceilingcats peek from the fabric of reality itself for only a few seconds!
+  Feed them before they disappear again!</p>
+
+  <h2 class="font-bold text-4xl">Galactic Medal of Honor!</h2>
+
+  <p>Gud hooman! U'z got a medul for ur meritus servis! thx!
+  O, wayt, lemme toornz dis inteepretur off...</p>
+
+  <p class="mt-2"> The Galactic Feline Federation sincerely commends you for your exemplary service!
+  We could not have defeated the filthy Pan-Felid Alliance mongrels without your help!
+  What? Feeding? Satiated? -- Voidsperson, you are no fresh private!
+  Did you really believe those augmentations?</p>
+
+  <p class="mt-2"> Cats disappearing into thin air, endless treats materializing in its pocketses...
+  Band-aids! Your ship takes damage from hospital craft just the same as enemy fighters, obviously
+  And whose arm has three elbows, huh?</p>
+
+  <p class="mt-2"> Humans. So gullible. I bet you still think we haven't caught the laser pointer.
+  Here's your medal. Enjoy it. And I assure you, this is no translation error;
+  Kthxbai.</p>
 `;
 
 const level1Events: LevelEvent[] = [
