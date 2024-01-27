@@ -6,7 +6,7 @@ import { defaultInputState, updateInputState } from "./input";
 import { gameHeight, gameWidth } from "./const.ts";
 import * as cat from "./cat.ts";
 import * as treat from "./treat.ts";
-import { Cat, CatRoute, updateCat } from "./cat.ts";
+import { Cat, CatAssets, CatRoute, updateCat } from "./cat.ts";
 import { Treat, updateTreat } from "./treat.ts";
 import { center, pixelPerfectScale, range } from "./util.ts";
 import { Level, level1 } from "./level.ts";
@@ -116,11 +116,18 @@ function preInitLevel(level: Level) {
 async function initLevel(level: Level) {
   const bgAsset = await Assets.load<Texture>("assets/Lvl1.png");
   const shipAsset = await Assets.load<Texture>("assets/Hand.png");
-  const catAsset = await Assets.load<Texture>("assets/Basic.png");
   const treatAsset = await Assets.load<Texture>("assets/Treat Projectile.png");
   const treatIconAsset = await Assets.load<Texture>("assets/Treat Magazine.png");
 
-  window.catFactory = (route: CatRoute, speed = 1) => (cats[catId++] = cat.init(catAsset, route, speed));
+  const catAssets: CatAssets = {
+    Buff: await Assets.load<Texture>("assets/Buff.png"),
+    Basic: await Assets.load<Texture>("assets/Basic.png"),
+    Zoomie: await Assets.load<Texture>("assets/Zoomie.png"),
+    Chungus: await Assets.load<Texture>("assets/Chungus.png"),
+  };
+
+  window.catFactory = (ty: keyof CatAssets, route: CatRoute, speed = 1) =>
+    (cats[catId++] = cat.init(catAssets[ty], route, speed));
 
   let nextEvent = 0;
 

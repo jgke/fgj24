@@ -10,8 +10,8 @@ export function initHealthCount(textures: Texture[]) {
       const heart = new AnimatedSprite(textures);
       heart.animationSpeed = 0.1;
       heart.gotoAndPlay(i % textures.length);
-      heart.x = gameWidth - (((heart.width + 10) / 2) * (x + 1) + y) * 4;
-      heart.y = (heart.height / 2 + y * 10) * 2;
+      heart.x = gameWidth - (((heart.width + 10) / 2) * (x + 1) + y) * 4 + 10;
+      heart.y = (heart.height / 2 + y * 10) * 2 + 10;
       heart.scale.x = 4;
       heart.scale.y = 4;
       heart.anchor.x = 0.5;

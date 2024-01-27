@@ -1,6 +1,13 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 
+export interface CatAssets {
+  Basic: Texture;
+  Buff: Texture;
+  Zoomie: Texture;
+  Chungus: Texture;
+}
+
 export interface Cat {
   health: number;
   sprite: Sprite;
