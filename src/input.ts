@@ -1,3 +1,5 @@
+import nipplejs, { JoystickEventTypes } from "../vendor/nipplejs";
+
 export interface InputState {
   moveX: number;
   moveY: number;
@@ -73,6 +75,29 @@ function absMax(a: number, b: number): number {
 let gpButtonStates: { [index: number]: ButtonClickStates } = {};
 let keyboardButtonStates: ButtonClickStates = {};
 
+let feed = document.getElementById("feed")!;
+let feedDown = false;
+let nipplePosition = { x: 0, y: 0 };
+if ("ontouchstart" in window || navigator.maxTouchPoints > 0 || (navigator as any).msMaxTouchPoints > 0) {
+  feed.style.display = "";
+
+  let manager = nipplejs.create({
+    mode: "static",
+    position: { bottom: "200px", left: "100px" },
+  })[0];
+  manager.on(
+    "move end" as JoystickEventTypes,
+    (_: any, data: any) => (nipplePosition = data?.vector ? { x: data.vector.x, y: -data.vector.y } : { x: 0, y: 0 }),
+  );
+}
+
+feed.addEventListener("pointerdown", () => {
+  feedDown = true;
+});
+feed.addEventListener("pointerup", () => {
+  feedDown = false;
+});
+
 export function updateInputState(): InputState {
   for (const gp of navigator.getGamepads()) {
     if (gp) {
@@ -101,7 +126,7 @@ export function updateInputState(): InputState {
 
   {
     keyboardInputState.a = handleState(keyboardButtonStates, 0, isKeyDown("a") || isKeyDown("A"));
-    keyboardInputState.b = handleState(keyboardButtonStates, 1, isKeyDown(" "));
+    keyboardInputState.b = handleState(keyboardButtonStates, 1, isKeyDown(" ") || feedDown);
     if (isKeyDown("ArrowUp")) {
       keyboardInputState.moveY = -1;
     }
@@ -120,6 +145,8 @@ export function updateInputState(): InputState {
     if (!isKeyDown("ArrowLeft") && !isKeyDown("ArrowRight")) {
       keyboardInputState.moveX = 0;
     }
+    keyboardInputState.moveX = absMax(keyboardInputState.moveX, nipplePosition.x);
+    keyboardInputState.moveY = absMax(keyboardInputState.moveY, nipplePosition.y);
   }
 
   return reduce(keyboardInputState, Object.values(gpInputStates).reduce(reduce, null));
