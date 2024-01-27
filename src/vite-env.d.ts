@@ -11,5 +11,5 @@ declare global {
   var delta: number;
   var tick: number;
 
-  var catFactory: (route: CatRoute) => void;
+  var catFactory: (route: CatRoute, speed = 1) => void;
 }

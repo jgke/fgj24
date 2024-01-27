@@ -30,7 +30,7 @@ async function init() {
   await fmodPromise;
   document.getElementById("app")!.appendChild(app.view as any);
 
-  window.catFactory = (route: CatRoute) => (cats[catId++] = cat.init(catAsset, route));
+  window.catFactory = (route: CatRoute, speed = 1) => (cats[catId++] = cat.init(catAsset, route, speed));
 
   const bgAsset = await Assets.load("assets/bg1.png");
   const shipAsset = await Assets.load("assets/cat.png");

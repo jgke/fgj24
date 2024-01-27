@@ -5,9 +5,27 @@ import { binomial } from "./util.ts";
 export interface Cat {
   sprite: Sprite;
   routeDelta: number;
+  speed: number;
   getPosition(delta: number): Point;
 }
 export type CatRoute = (delta: number) => Point;
+
+export function combine(...routes: [number, CatRoute][]): CatRoute {
+  const total = routes.map(([n, _]) => n).reduce((a, b) => a + b);
+  return (delta) => {
+    const cur = total * delta;
+    let start = 0;
+    for (let i = 0; i < routes.length; i++) {
+      const end = start + routes[i][0];
+      if (start <= cur && cur <= end) {
+        const innerDelta = (cur - start) / (end - start);
+        return routes[i][1](innerDelta);
+      }
+      start = end;
+    }
+    return routes[routes.length - 1][1](1);
+  };
+}
 
 export function interpolate(from: Point, to: Point): CatRoute {
   return (delta) => new Point(from.x + delta * (to.x - from.x), from.y + delta * (to.y - from.y));
@@ -33,7 +51,7 @@ export function bezier(...points: Point[]): CatRoute {
   };
 }
 
-export function init(texture: Texture, route: CatRoute): Cat {
+export function init(texture: Texture, route: CatRoute, speed: number = 1): Cat {
   const cat = new Sprite(texture);
   cat.x = app.renderer.width / 2;
   cat.y = app.renderer.height / 2;
@@ -50,11 +68,11 @@ export function init(texture: Texture, route: CatRoute): Cat {
   // Add the bunny to the scene we are building
   app.stage.addChild(cat);
 
-  return { sprite: cat, routeDelta: 0, getPosition: route };
+  return { sprite: cat, routeDelta: 0, speed, getPosition: route };
 }
 
 export function updateCat(cat: Cat): boolean {
-  cat.routeDelta += delta / 100;
+  cat.routeDelta += (delta / 100) * cat.speed;
   if (cat.routeDelta > 1) {
     app.stage.removeChild(cat.sprite);
     return true;
