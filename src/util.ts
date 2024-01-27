@@ -12,3 +12,24 @@ export function offscreen(sprite: Sprite): boolean {
 export function center(sprite: Sprite): Point {
   return new Point(sprite.x + sprite.width / 2, sprite.y + sprite.height / 2);
 }
+
+export function range(n: number): number[] {
+  return [...Array(n)].map((_, i) => i);
+}
+
+export function pixelPerfectScale(
+  containerWidth: number,
+  containerHeight: number,
+  windowWidth: number,
+  windowHeight: number,
+): number {
+  let scale = 1;
+
+  while (containerWidth * (scale + 1) <= windowWidth && containerHeight * (scale + 1) <= windowHeight) scale += 1;
+  console.log("Midscale", scale);
+  while (containerWidth * scale > windowWidth || containerHeight * scale > windowHeight) scale /= 2;
+
+  console.log("Scaled to", scale);
+
+  return scale;
+}

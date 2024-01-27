@@ -1,5 +1,5 @@
 import "./style.css";
-import { Application, Assets, Sprite } from "pixi.js";
+import { Application, Assets, Container, Sprite } from "pixi.js";
 
 import { initFmod, updateFmod } from "./fmod";
 import { defaultInputState, updateInputState } from "./input";
@@ -9,7 +9,7 @@ import * as cat from "./cat.ts";
 import * as treat from "./treat.ts";
 import { Cat, CatRoute, updateCat } from "./cat.ts";
 import { Treat, updateTreat } from "./treat.ts";
-import { center } from "./util.ts";
+import { center, pixelPerfectScale } from "./util.ts";
 import { level1 } from "./level.ts";
 import { initTreatCount, updateTreatCount } from "./treatCount.ts";
 
@@ -24,11 +24,35 @@ let maxTreatCount = 3;
 let treatCount = 3;
 
 async function init() {
+  const scale = pixelPerfectScale(gameWidth, gameHeight, window.innerWidth, window.innerHeight);
+
   window.inp = defaultInputState;
-  window.app = new Application({ width: gameWidth, height: gameHeight });
+  window.app = new Application({ width: scale * gameWidth, height: scale * gameHeight });
   window.delta = 0;
   await fmodPromise;
   document.getElementById("app")!.appendChild(app.view as any);
+
+  window.stage = new Container();
+  stage.width = gameWidth;
+  stage.height = gameHeight;
+  stage.scale.x = scale;
+  stage.scale.y = scale;
+  app.stage.addChild(stage);
+
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+  if (!iOS) {
+    window.addEventListener("resize", () => {
+      const scale = pixelPerfectScale(gameWidth, gameHeight, window.innerWidth, window.innerHeight);
+      stage.scale.x = scale;
+      stage.scale.y = scale;
+      app.renderer.resize(gameWidth * scale, gameHeight * scale);
+      //app.stage.width = gameWidth;
+      //app.stage.height = gameHeight;
+      //app.view.width = gameWidth * scale;
+      //app.view.height = gameHeight * scale;
+      //app.resize();
+    });
+  }
 
   window.catFactory = (route: CatRoute, speed = 1) => (cats[catId++] = cat.init(catAsset, route, speed));
 
@@ -44,7 +68,7 @@ async function init() {
   const bg = new Sprite(bgAsset);
   bg.x = 0;
   bg.y = -bg.height + gameHeight;
-  app.stage.addChild(bg);
+  stage.addChild(bg);
 
   ship.init(shipAsset);
   initTreatCount(treatIconAsset);
@@ -95,9 +119,12 @@ async function init() {
       const treatRect = treats[treatsKey].sprite.getBounds();
       for (let catsKey in cats) {
         if (cats[catsKey].sprite.getBounds().intersects(treatRect)) {
-          app.stage.removeChild(cats[catsKey].sprite);
-          app.stage.removeChild(treats[treatsKey].sprite);
-          delete cats[catsKey];
+          cats[catsKey].health -= 1;
+          if (cats[catsKey].health <= 0) {
+            stage.removeChild(cats[catsKey].sprite);
+            delete cats[catsKey];
+          }
+          stage.removeChild(treats[treatsKey].sprite);
           delete treats[treatsKey];
           break;
         }

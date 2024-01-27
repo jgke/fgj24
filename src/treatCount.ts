@@ -9,7 +9,7 @@ export function initTreatCount(texture: Texture) {
     treat.y = treat.height / 2;
     treat.anchor.x = 0.5;
     treat.anchor.y = 0.5;
-    app.stage.addChild(treat);
+    stage.addChild(treat);
     treatIcons.push(treat);
   }
 }

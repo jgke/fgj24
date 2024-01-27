@@ -1,8 +1,8 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
-import { binomial } from "./util.ts";
 
 export interface Cat {
+  health: number;
   sprite: Sprite;
   routeDelta: number;
   speed: number;
@@ -66,15 +66,15 @@ export function init(texture: Texture, route: CatRoute, speed: number = 1): Cat 
   cat.anchor.y = 0.5;
 
   // Add the bunny to the scene we are building
-  app.stage.addChild(cat);
+  stage.addChild(cat);
 
-  return { sprite: cat, routeDelta: 0, speed, getPosition: route };
+  return { health: 2, sprite: cat, routeDelta: 0, speed, getPosition: route };
 }
 
 export function updateCat(cat: Cat): boolean {
   cat.routeDelta += (delta / 100) * cat.speed;
   if (cat.routeDelta > 1) {
-    app.stage.removeChild(cat.sprite);
+    stage.removeChild(cat.sprite);
     return true;
   }
 

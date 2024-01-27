@@ -19,7 +19,7 @@ export function init(texture: Texture) {
   ship.anchor.y = 0.5;
 
   // Add the bunny to the scene we are building
-  app.stage.addChild(ship);
+  stage.addChild(ship);
 }
 
 export function updateShip() {
