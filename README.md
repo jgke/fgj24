@@ -1,5 +1,7 @@
 # fgj24
 
+Cat feeding game, hosted live at https://jgke.fi/games/fgj24/dist
+
 ## Running
 
 ```
