@@ -50,6 +50,16 @@ const level1Events: LevelEvent[] = [
       ),
     ),
   ),
+
+  ...waveOf5(10000, new Point(0, 100), new Point(gameWidth, 100)),
+  ...waveOf5(10600, new Point(0, 200), new Point(gameWidth, 200)),
+  ...waveOf5(11200, new Point(0, 300), new Point(gameWidth, 300)),
+  ...waveOf5(11800, new Point(0, 400), new Point(gameWidth, 400)),
+
+  ...waveOf5(14000, new Point(gameWidth, 100), new Point(0, 100)),
+  ...waveOf5(14600, new Point(gameWidth, 200), new Point(0, 200)),
+  ...waveOf5(15200, new Point(gameWidth, 300), new Point(0, 300)),
+  ...waveOf5(15800, new Point(gameWidth, 400), new Point(0, 400)),
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 
