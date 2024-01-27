@@ -23,6 +23,7 @@ let previousTreat = 0;
 let maxTreatCount = 3;
 let treatCount = 3;
 
+let tickerFn = (_: number) => {};
 async function init() {
   const scale = pixelPerfectScale(gameWidth, gameHeight, window.innerWidth, window.innerHeight);
 
@@ -53,14 +54,18 @@ async function init() {
       //app.resize();
     });
   }
-
-  window.catFactory = (route: CatRoute, speed = 1) => (cats[catId++] = cat.init(catAsset, route, speed));
-
+  app.ticker.add((delta) => tickerFn(delta));
+  await initLevel();
+}
+async function initLevel() {
+  stage.removeChildren();
   const bgAsset = await Assets.load("assets/bg1.png");
   const shipAsset = await Assets.load("assets/cat.png");
   const catAsset = await Assets.load("assets/Basic.png");
   const treatAsset = await Assets.load("assets/Treat Projectile.png");
   const treatIconAsset = await Assets.load("assets/Treat Magazine.png");
+
+  window.catFactory = (route: CatRoute, speed = 1) => (cats[catId++] = cat.init(catAsset, route, speed));
 
   const level = level1;
   let nextEvent = 0;
@@ -76,11 +81,16 @@ async function init() {
   const startTime = Date.now();
 
   // Listen for frame updates
-  app.ticker.add((delta) => {
+  tickerFn = (delta) => {
     updateFmod();
     window.tick = Date.now() - startTime;
     window.delta = delta;
     window.inp = updateInputState();
+
+    if (inp.a[1]) {
+      initLevel();
+      return;
+    }
 
     while (nextEvent < level.length && level[nextEvent][0] < tick) {
       level[nextEvent][1]();
@@ -130,7 +140,7 @@ async function init() {
         }
       }
     }
-  });
+  };
 }
 document.getElementById("start-playing")!.addEventListener("click", () => {
   document.getElementById("loader")!.remove();
