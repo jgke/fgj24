@@ -40,9 +40,9 @@ const level1Story = `
 
   <p>Different kinds of cats take different amounts of treats to be satiated. 
   The grey Hunky Bulky Big Toms are a bit slower, but take more treats to be satiated.
-  Don't feed the Lumbering Chonkers! They're very slow, and they don't need to get slower.
+  Don't feed the white Lumbering Chonkers! They're very slow, and they don't need to get slower.
   If you feed a Chonker, you lose a band-aid. It makes sense, I swear.
-  Zoomie Goblins move faster but take less treats to be satiated.</p>
+  The solid orange Zoomie Goblins move faster but take less treats to be satiated.</p>
 
   <h2 class="font-bold text-4xl">Masters of the Universe!</h2>
 
