@@ -27,7 +27,9 @@ let invul = 0;
 
 let tickerFn = (_: number) => {};
 let healthPickupAnimation: Spritesheet | null = null;
+
 async function init() {
+  playEvent("event:/music");
   const scale = pixelPerfectScale(gameWidth, gameHeight, window.innerWidth, window.innerHeight);
 
   window.inp = defaultInputState;

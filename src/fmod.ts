@@ -59,6 +59,7 @@ function main() {
   loadBank(bankStringData);
 
   loadEvent("event:/meow");
+  loadEvent("event:/music");
 
   // Set up iOS/Chrome workaround. WebAudio is not allowed to start unless screen is touched or button is clicked.
   function resumeAudio() {
@@ -84,8 +85,13 @@ function main() {
 }
 
 export function playEvent(soundId: string) {
+  console.log("Playing event", soundId);
   const descr = events[soundId];
-  if (!descr) return;
+  if (!descr) {
+    console.log("Event not found!");
+    console.log("Available events:", Object.keys(events));
+    return;
+  }
 
   const eventInstance: any = {};
   CHECK_RESULT(descr.val.createInstance(eventInstance));
