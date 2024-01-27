@@ -1,4 +1,4 @@
-import { Point, Texture } from "pixi.js";
+import { Point } from "pixi.js";
 import { bezier, CatAssets, wobblyLine } from "./cat.ts";
 import { range } from "./util.ts";
 import { gameHeight, gameWidth } from "./const.ts";
@@ -32,6 +32,7 @@ const level1Story = `
 `;
 
 const level1Events: LevelEvent[] = [
+  /*
   ...waveOf5(1000, "Basic", new Point(0, 100), new Point(gameWidth, 100)),
   ...waveOf5(3000, "Basic", new Point(gameWidth, 200), new Point(0, 200)),
   ...waveOf5(6000, "Basic", new Point(0, 100), new Point(gameWidth, 100)),
@@ -72,7 +73,9 @@ const level1Events: LevelEvent[] = [
   ...waveOf5(42000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
   ...waveOf5(47000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
 
-  ...waveOf5(50000, "Basic", new Point(gameWidth, 300), new Point(0, 300)),
+  [50000, () => bigCat()]
+     */
+  [1000, () => bigCat()],
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 

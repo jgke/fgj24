@@ -13,52 +13,53 @@ export interface Cat {
   sprite: Sprite;
   routeDelta: number;
   speed: number;
-  getPosition(delta: number): Point;
+  getPosition(delta: number, cat: Cat): Point;
 }
-export type CatRoute = (delta: number) => Point;
+export type CatRoute<T> = (delta: number, cat: T) => Point;
 
-export function combine(...routes: [number, CatRoute][]): CatRoute {
+export function combine<T>(...routes: [number, CatRoute<T>][]): CatRoute<T> {
   const total = routes.map(([n, _]) => n).reduce((a, b) => a + b);
-  return (delta) => {
+  return (delta, cat) => {
     const cur = total * delta;
     let start = 0;
     for (let i = 0; i < routes.length; i++) {
       const end = start + routes[i][0];
       if (start <= cur && cur <= end) {
         const innerDelta = (cur - start) / (end - start);
-        return routes[i][1](innerDelta);
+        console.log(routes[i][1], innerDelta);
+        return routes[i][1](innerDelta, cat);
       }
       start = end;
     }
-    return routes[routes.length - 1][1](1);
+    return routes[routes.length - 1][1](1, cat);
   };
 }
 
-export function interpolate(from: Point, to: Point): CatRoute {
+export function interpolate<T>(from: Point, to: Point): CatRoute<T> {
   return (delta) => new Point(from.x + delta * (to.x - from.x), from.y + delta * (to.y - from.y));
 }
 
-export function wobblyLine(from: Point, to: Point): CatRoute {
-  return (delta) => {
-    const p = interpolate(from, to)(delta);
+export function wobblyLine<T>(from: Point, to: Point): CatRoute<T> {
+  return (delta, cat) => {
+    const p = interpolate(from, to)(delta, cat);
     p.y += Math.sin(delta * 10) * 10;
     return p;
   };
 }
 
-export function bezier(...points: Point[]): CatRoute {
-  return (delta) => {
+export function bezier<T>(...points: Point[]): CatRoute<T> {
+  return (delta, cat) => {
     if (points.length <= 1) return points[0];
-    if (points.length == 2) return interpolate(points[0], points[1])(delta);
+    if (points.length == 2) return interpolate(points[0], points[1])(delta, cat);
     const pn = [];
     for (let i = 0; i < points.length - 1; i++) {
-      pn.push(interpolate(points[i], points[i + 1])(delta));
+      pn.push(interpolate(points[i], points[i + 1])(delta, cat));
     }
-    return bezier(...pn)(delta);
+    return bezier(...pn)(delta, cat);
   };
 }
 
-export function init(texture: Texture, route: CatRoute, speed: number = 1): Cat {
+export function init(texture: Texture, route: CatRoute<Cat>, speed: number = 1): Cat {
   const cat = new Sprite(texture);
   cat.x = app.renderer.width / 2;
   cat.y = app.renderer.height / 2;
@@ -85,7 +86,7 @@ export function updateCat(cat: Cat): boolean {
     return true;
   }
 
-  const pos = cat.getPosition(cat.routeDelta);
+  const pos = cat.getPosition(cat.routeDelta, cat);
 
   cat.sprite.x = pos.x;
   cat.sprite.y = pos.y;

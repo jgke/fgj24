@@ -13,4 +13,5 @@ declare global {
   var tick: number;
 
   var catFactory: (ty: keyof CatAssets, route: CatRoute, speed = 1) => void;
+  var bigCat: () => void;
 }

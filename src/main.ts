@@ -13,6 +13,7 @@ import { Level, level1 } from "./level.ts";
 import { initTreatCount, updateTreatCount } from "./treatCount.ts";
 import { initShip, updateShip } from "./ship.ts";
 import { initHealthCount, updateHealthIcons } from "./healthCount.ts";
+import { BigCat, initBigcat, updateBigCat } from "./bigcat.ts";
 
 const fmodPromise = initFmod().then(() => console.log("FMOD initialized"));
 
@@ -118,6 +119,7 @@ async function initLevel(level: Level) {
   const shipAsset = await Assets.load<Texture>("assets/Hand.png");
   const treatAsset = await Assets.load<Texture>("assets/Treat Projectile.png");
   const treatIconAsset = await Assets.load<Texture>("assets/Treat Magazine.png");
+  const bigcatAsset = await Assets.load<Texture>("assets/cat.png");
 
   const catAssets: CatAssets = {
     Buff: await Assets.load<Texture>("assets/Buff.png"),
@@ -126,8 +128,10 @@ async function initLevel(level: Level) {
     Chungus: await Assets.load<Texture>("assets/Chungus.png"),
   };
 
-  window.catFactory = (ty: keyof CatAssets, route: CatRoute, speed = 1) =>
+  window.catFactory = (ty: keyof CatAssets, route: CatRoute<Cat>, speed = 1) =>
     (cats[catId++] = cat.init(catAssets[ty], route, speed));
+  let bigCat: BigCat | null = null;
+  window.bigCat = () => (bigCat = initBigcat(bigcatAsset));
 
   let nextEvent = 0;
 
@@ -179,6 +183,7 @@ async function initLevel(level: Level) {
         delete cats[catsKey];
       }
     }
+    if (bigCat) updateBigCat(bigCat);
 
     // fire treats
     if (inp.b[0] && previousTreat + 100 < Date.now() && treatCount > 0) {
@@ -197,6 +202,19 @@ async function initLevel(level: Level) {
     // advanced collision checking logic, highly optimized
     for (let treatsKey in treats) {
       const treatRect = treats[treatsKey].sprite.getBounds();
+      if (bigCat) {
+        if (bigCat.sprite.getBounds().intersects(treatRect)) {
+          bigCat.health -= 1;
+          if (bigCat.health <= 0) {
+            playEvent("event:/meow");
+            stage.removeChild(bigCat.sprite);
+            bigCat = null;
+          }
+          stage.removeChild(treats[treatsKey].sprite);
+          delete treats[treatsKey];
+          continue;
+        }
+      }
       for (let catsKey in cats) {
         if (cats[catsKey].sprite.getBounds().intersects(treatRect)) {
           cats[catsKey].health -= 1;
