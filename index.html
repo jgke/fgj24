@@ -9,8 +9,8 @@
   </head>
   <body class="flex justify-center items-center overflow-hidden fixed h-[100vh]">
     <div id="app"></div>
-    <div id="loader" class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl">
-      <h1 class="text-4xl font-bold underline">FGJ24</h1>
+    <div id="loader" class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl w-5/6">
+      <h1 class="text-4xl font-bold underline">Cat Feeding Game</h1>
       <p class="sr-only">The interactive content is probably not accessible.</p>
       <button id="start-playing" class="mt-10 p-2 border rounded bg-gray-200">Start playing</button>
 
@@ -34,6 +34,18 @@
           </p>
         </div>
       </div>
+    </div>
+
+    <div
+      id="story"
+      style="display: none"
+      class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl w-5/6 absolute"
+    >
+      <h1 id="story-title" class="text-4xl font-bold underline">Level 1</h1>
+
+      <div id="story-content" class="mt-10"></div>
+
+      <button id="start-level" class="mt-10 p-2 border rounded bg-gray-200">Start feeding</button>
     </div>
 
     <div

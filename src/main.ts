@@ -10,7 +10,7 @@ import * as treat from "./treat.ts";
 import { Cat, CatRoute, updateCat } from "./cat.ts";
 import { Treat, updateTreat } from "./treat.ts";
 import { center, pixelPerfectScale } from "./util.ts";
-import { level1 } from "./level.ts";
+import { Level, level1 } from "./level.ts";
 import { initTreatCount, updateTreatCount } from "./treatCount.ts";
 
 const fmodPromise = initFmod().then(() => console.log("FMOD initialized"));
@@ -55,10 +55,23 @@ async function init() {
     });
   }
   app.ticker.add((delta) => tickerFn(delta));
-  await initLevel();
+  preInitLevel(level1);
 }
-async function initLevel() {
+
+function preInitLevel(level: Level) {
   stage.removeChildren();
+  tickerFn = () => {};
+
+  document.getElementById("story-title")!.innerHTML = level.title;
+  document.getElementById("story-content")!.innerHTML = level.story;
+  document.getElementById("story")!.style.display = "";
+  document.getElementById("start-level")!.addEventListener("click", () => {
+    document.getElementById("story")!.style.display = "none";
+    initLevel(level).then(console.log);
+  });
+}
+
+async function initLevel(level: Level) {
   const bgAsset = await Assets.load("assets/Lvl1.png");
   const shipAsset = await Assets.load("assets/Hand.png");
   const catAsset = await Assets.load("assets/Basic.png");
@@ -67,7 +80,6 @@ async function initLevel() {
 
   window.catFactory = (route: CatRoute, speed = 1) => (cats[catId++] = cat.init(catAsset, route, speed));
 
-  const level = level1;
   let nextEvent = 0;
 
   const bg = new Sprite(bgAsset);
@@ -88,12 +100,12 @@ async function initLevel() {
     window.inp = updateInputState();
 
     if (inp.a[1]) {
-      initLevel();
+      preInitLevel(level);
       return;
     }
 
-    while (nextEvent < level.length && level[nextEvent][0] < tick) {
-      level[nextEvent][1]();
+    while (nextEvent < level.events.length && level.events[nextEvent][0] < tick) {
+      level.events[nextEvent][1]();
       nextEvent++;
     }
 
