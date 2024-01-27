@@ -8,6 +8,7 @@ export type LevelEvent = [number, () => void];
 export interface Level {
   title: string;
   story: string;
+  bg: string;
   events: LevelEvent[];
 }
 
@@ -118,7 +119,7 @@ const level1Events: LevelEvent[] = [
   ...waveOf5(42000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
   ...waveOf5(47000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
 
-  //[50000, () => bigCat()]
+  [50000, () => bigCat()],
   //[1000, () => bigCat()],
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
@@ -127,6 +128,6 @@ level1Events.sort((a, b) => a[0] - b[0]);
 const level2Events = level1Events;
 const level3Events = level1Events;
 
-export const level1: Level = { title: "Level 1", story: level1Story, events: level1Events };
-export const level2: Level = { title: "Level 2", story: level2Story, events: level2Events };
-export const level3: Level = { title: "Level 3", story: level3Story, events: level3Events };
+export const level1: Level = { title: "Level 1", bg: "Lvl1.png", story: level1Story, events: level1Events };
+export const level2: Level = { title: "Level 2", bg: "Lvl1.png", story: level2Story, events: level2Events };
+export const level3: Level = { title: "Level 3", bg: "Lvl3.png", story: level3Story, events: level3Events };

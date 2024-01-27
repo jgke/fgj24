@@ -92,6 +92,7 @@ async function init() {
   // preload assets
   await Promise.all([
     Assets.load("assets/Lvl1.png"),
+    Assets.load("assets/Lvl3.png"),
     Assets.load("assets/Hand.png"),
     Assets.load("assets/Basic.png"),
     Assets.load("assets/Treat Projectile.png"),
@@ -127,7 +128,7 @@ async function init() {
 }
 
 function preInitLevel(level: Level) {
-  console.log(stage.removeChildren());
+  console.log("Preinit", level.title);
   tickerFn = () => {};
 
   document.getElementById("story-title")!.innerHTML = level.title;
@@ -136,15 +137,20 @@ function preInitLevel(level: Level) {
     document.getElementById("story-content")!.scrollTop = 0;
   }, 0);
   document.getElementById("story")!.style.display = "";
-  document.getElementById("start-level")!.addEventListener("click", () => {
+
+  function handler() {
+    document.getElementById("start-level")!.removeEventListener("click", handler);
+    console.log("start-level clicked");
     playEvent("event:/meow");
     document.getElementById("story")!.style.display = "none";
     initLevel(level).then(console.log);
-  });
+  }
+  document.getElementById("start-level")!.addEventListener("click", handler);
 }
 
 async function initLevel(level: Level) {
-  const bgAsset = await Assets.load<Texture>("assets/Lvl1.png");
+  console.log("Init", level.title);
+  const bgAsset = await Assets.load<Texture>(`assets/${level.bg}`);
   const shipAsset = await Assets.load<Texture>("assets/Hand.png");
   const treatAsset = await Assets.load<Texture>("assets/Treat Projectile.png");
   const treatIconAsset = await Assets.load<Texture>("assets/Treat Magazine.png");
@@ -239,8 +245,10 @@ async function initLevel(level: Level) {
             stage.removeChild(bigCat.sprite);
             bigCat = null;
             if (currentLevel === 1) {
+              currentLevel = 2;
               preInitLevel(level2);
             } else if (currentLevel === 2) {
+              currentLevel = 3;
               preInitLevel(level3);
             } else if (currentLevel === 3) {
               {
@@ -317,6 +325,7 @@ async function initLevel(level: Level) {
   };
 }
 document.getElementById("start-playing")!.addEventListener("click", () => {
+  console.log("start-playing clicked");
   playEvent("event:/meow");
   document.getElementById("loader")!.remove();
   init().then(console.log);
