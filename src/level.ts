@@ -73,7 +73,7 @@ const level1Events: LevelEvent[] = [
   ...waveOf5(47000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
 
   //[50000, () => bigCat()]
-  [1000, () => bigCat()],
+  //[1000, () => bigCat()],
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 

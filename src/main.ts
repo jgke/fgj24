@@ -29,6 +29,30 @@ let invul = 0;
 let tickerFn = (_: number) => {};
 let healthPickupAnimation: Spritesheet | null = null;
 
+let feedTimer = 0;
+let feedSpeedCount = 0;
+let feedUnhitCount = 0;
+const speedStreakTreshold = 5000; // ms
+
+const speedStreaks: [number, string][] = [
+  [2, "Double Kill"],
+  [3, "Multi Kill"],
+  [4, "Mega Kill"],
+  [5, "Ultra Kill"],
+  [6, "MONSTER KILL"],
+  [7, "LUDICROUS KILL"],
+  [8, "HOLY *MEOW*"],
+];
+
+const unhitStreaks: [number, string][] = [
+  [5, "Killing Spree"],
+  [10, "Rampage"],
+  [15, "Dominating"],
+  [20, "Unstoppable"],
+  [25, "Godlike"],
+  [30, "WICKED SICK"],
+];
+
 async function init() {
   playEvent("event:/music");
   const scale = pixelPerfectScale(gameWidth, gameHeight, window.innerWidth, window.innerHeight);
@@ -221,6 +245,27 @@ async function initLevel(level: Level) {
           if (cats[catsKey].health <= 0) {
             stage.removeChild(cats[catsKey].sprite);
             delete cats[catsKey];
+
+            const dt = Date.now() - feedTimer;
+            if (dt < speedStreakTreshold) {
+              feedSpeedCount += 1;
+            } else {
+              feedSpeedCount = 1;
+            }
+            feedUnhitCount += 1;
+            feedTimer = Date.now();
+
+            for (let i = 0; i < speedStreaks.length; i++) {
+              if (speedStreaks[i][0] == feedSpeedCount) {
+                console.warn(speedStreaks[i][1]);
+              }
+            }
+
+            for (let i = 0; i < unhitStreaks.length; i++) {
+              if (unhitStreaks[i][0] == feedUnhitCount) {
+                console.warn(unhitStreaks[i][1]);
+              }
+            }
           }
           stage.removeChild(treats[treatsKey].sprite);
           delete treats[treatsKey];
@@ -239,6 +284,7 @@ async function initLevel(level: Level) {
       for (let catsKey in cats) {
         if (cats[catsKey].sprite.getBounds().intersects(shipRect)) {
           invul = 30;
+          feedUnhitCount = 0;
           ship.health -= 1;
           cats[catsKey].health -= 1;
           if (cats[catsKey].health <= 0) {
