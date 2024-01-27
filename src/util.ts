@@ -3,9 +3,9 @@ import { Point, Sprite } from "pixi.js";
 export function offscreen(sprite: Sprite): boolean {
   return (
     sprite.x + sprite.width < 0 ||
-    sprite.x - sprite.width > app.view.width ||
+    sprite.x - sprite.width > app.view.width / stage.scale.x ||
     sprite.y + sprite.height < 0 ||
-    sprite.y - sprite.height > app.view.height
+    sprite.y - sprite.height > app.view.height / stage.scale.y
   );
 }
 

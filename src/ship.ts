@@ -2,10 +2,13 @@ import { Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
-export let ship: Sprite;
+interface Ship {
+  sprite: Sprite;
+  health: number;
+}
 
-export function init(texture: Texture) {
-  ship = new Sprite(texture);
+export function initShip(texture: Texture): Ship {
+  const ship = new Sprite(texture);
   ship.x = app.renderer.width / 2;
   ship.y = app.renderer.height + ship.height;
 
@@ -20,15 +23,18 @@ export function init(texture: Texture) {
 
   // Add the bunny to the scene we are building
   stage.addChild(ship);
+
+  return { sprite: ship, health: 12 };
 }
 
-export function updateShip() {
+export function updateShip(ship: Ship) {
   const speed = 10;
-  ship.x += speed * inp.moveX * delta;
-  ship.y += speed * inp.moveY * delta;
+  ship.sprite.x += speed * inp.moveX * delta;
+  ship.sprite.y += speed * inp.moveY * delta;
 
-  if (ship.x - ship.width / 2 < 0) ship.x = ship.width / 2;
-  if (ship.x + ship.width / 2 > gameWidth) ship.x = gameWidth - ship.width / 2;
-  if (ship.y - ship.height / 2 < 0) ship.y = ship.height / 2;
-  if (ship.y - ship.height / 2 + ship.width > gameHeight) ship.y = gameHeight + ship.height / 2 - ship.width;
+  if (ship.sprite.x - ship.sprite.width / 2 < 0) ship.sprite.x = ship.sprite.width / 2;
+  if (ship.sprite.x + ship.sprite.width / 2 > gameWidth) ship.sprite.x = gameWidth - ship.sprite.width / 2;
+  if (ship.sprite.y - ship.sprite.height / 2 < 0) ship.sprite.y = ship.sprite.height / 2;
+  if (ship.sprite.y - ship.sprite.height / 2 + ship.sprite.width > gameHeight)
+    ship.sprite.y = gameHeight + ship.sprite.height / 2 - ship.sprite.width;
 }
