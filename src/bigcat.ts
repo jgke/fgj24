@@ -1,6 +1,6 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
-import { CatRoute, combine, interpolate } from "./cat.ts";
+import { CatRoute, interpolate } from "./cat.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
 export interface BigCat {
