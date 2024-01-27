@@ -1,5 +1,6 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
+import { binomial } from "./util.ts";
 
 export interface Cat {
   sprite: Sprite;
@@ -8,9 +9,28 @@ export interface Cat {
 }
 export type CatRoute = (delta: number) => Point;
 
+export function interpolate(from: Point, to: Point): CatRoute {
+  return (delta) => new Point(from.x + delta * (to.x - from.x), from.y + delta * (to.y - from.y));
+}
+
 export function wobblyLine(from: Point, to: Point): CatRoute {
-  return (delta) =>
-    new Point(from.x + delta * (to.x - from.x), from.y + delta * (to.y - from.y) + Math.sin(delta * 10) * 10);
+  return (delta) => {
+    const p = interpolate(from, to)(delta);
+    p.y += Math.sin(delta * 10) * 10;
+    return p;
+  };
+}
+
+export function bezier(...points: Point[]): CatRoute {
+  return (delta) => {
+    if (points.length <= 1) return points[0];
+    if (points.length == 2) return interpolate(points[0], points[1])(delta);
+    const pn = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      pn.push(interpolate(points[i], points[i + 1])(delta));
+    }
+    return bezier(...pn)(delta);
+  };
 }
 
 export function init(texture: Texture, route: CatRoute): Cat {
