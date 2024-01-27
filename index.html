@@ -8,7 +8,59 @@
     <%- injectFmod %>
   </head>
   <body class="flex justify-center items-center overflow-hidden fixed h-[100vh]">
-    <div id="app"></div>
+    <div id="app" class="relative">
+      <div
+        class="absolute w-full h-full flex flex-col opacity-75 text-[100px] justify-between leading-none pointer-events-none"
+      >
+        <div class="flex w-full h-full justify-between items-start">
+          <div id="onscreen-tl" class="opacity-75 overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!!!</span>
+          </div>
+          <div id="onscreen-t" class="opacity-75 overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!!!</span>
+          </div>
+          <div id="onscreen-tr" class="opacity-75 overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!!!</span>
+          </div>
+        </div>
+        <div class="flex w-full h-full justify-between items-end" style="opacity: 0">
+          <div id="onscreen-bl" class="opacity-75 overflow-hidden">
+            <span class="bg-yellow-500">!!!</span>
+          </div>
+          <div id="onscreen-b" class="opacity-75 overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!!!</span>
+          </div>
+          <div id="onscreen-br" class="opacity-75 overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!!!</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute w-full h-full flex opacity-75 text-[100px] justify-between leading-none pointer-events-none">
+        <div class="flex flex-col h-full w-full justify-between items-start">
+          <div id="onscreen-lt" class="overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!</span>
+          </div>
+          <div id="onscreen-l" class="overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!</span>
+          </div>
+          <div id="onscreen-lb" class="overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!</span>
+          </div>
+        </div>
+        <div class="flex flex-col h-full w-full justify-between items-end">
+          <div id="onscreen-rt" class="overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!</span>
+          </div>
+          <div id="onscreen-r" class="overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!</span>
+          </div>
+          <div id="onscreen-rb" class="overflow-hidden" style="opacity: 0">
+            <span class="bg-yellow-500">!</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="loader" class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl w-5/6">
       <h1 class="text-4xl font-bold underline">Cat Feeding Game</h1>
       <p class="sr-only">The interactive content is probably not accessible.</p>

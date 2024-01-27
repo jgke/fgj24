@@ -1,13 +1,13 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
-import { CatRoute, combine, interpolate, wobblyLine } from "./cat.ts";
+import { CatRoute, combine, interpolate } from "./cat.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
 export interface BigCat {
   health: number;
   sprite: Sprite;
   routeDelta: number;
-  didAttack: boolean;
+  attackIndex: [number, number] | null;
   speed: number;
   getPosition(delta: number, cat: BigCat): Point;
 }
@@ -36,7 +36,7 @@ export function initBigcat(texture: Texture): BigCat {
   // Add the bunny to the scene we are building
   stage.addChild(bigcat);
 
-  return { health: 200, sprite: bigcat, routeDelta: 0, didAttack: false, speed: 1, getPosition: initialRoute };
+  return { health: 200, sprite: bigcat, routeDelta: 0, attackIndex: null, speed: 1, getPosition: initialRoute };
 }
 
 function fade(delta: number, cat: BigCat): Point {
@@ -45,6 +45,18 @@ function fade(delta: number, cat: BigCat): Point {
 }
 
 const setPos = (pos: Point) => interpolate(pos, pos);
+function showDanger(danger: string): CatRoute<BigCat> {
+  return (_delta, cat) => {
+    document.getElementById("onscreen-" + danger)!.style.opacity = "0.75";
+    return cat.sprite.position;
+  };
+}
+function hideDanger(danger: string): CatRoute<BigCat> {
+  return (_delta, cat) => {
+    document.getElementById("onscreen-" + danger)!.style.opacity = "0";
+    return cat.sprite.position;
+  };
+}
 const stay: CatRoute<BigCat> = (_delta, cat) => cat.sprite.position;
 
 function appear(delta: number, cat: BigCat): Point {
@@ -52,34 +64,50 @@ function appear(delta: number, cat: BigCat): Point {
   return cat.sprite.position;
 }
 
-const attacks: [number, CatRoute<BigCat>][] = [
+const attacks: [number, [number, CatRoute<BigCat>][]][] = [
   [
-    3,
-    combine(
+    1,
+    [
       [1, stay],
       [1, fade],
       [1, setPos(new Point(-500, gameHeight / 2))],
+      [0, showDanger("tl")],
+      [1, showDanger("l")],
       [1, appear],
       [1, interpolate(new Point(-500, gameHeight / 2), new Point(gameWidth + 500, gameHeight / 2))],
-    ),
+      [0, hideDanger("tl")],
+      [1, hideDanger("l")],
+    ],
   ],
 ];
 
 export function updateBigCat(cat: BigCat): boolean {
   cat.routeDelta += (delta / 100) * cat.speed;
-  if (cat.routeDelta > 1) {
-    if (cat.didAttack) {
+
+  const curAttack = cat.attackIndex ? attacks[cat.attackIndex[0]] : null;
+  const curSubAttack = cat.attackIndex ? curAttack![1][cat.attackIndex[1]] : null;
+
+  if (cat.routeDelta > (curSubAttack?.[0] ?? 1)) {
+    if (cat.attackIndex && curAttack![1].length - 1 == cat.attackIndex[1]) {
+      // stop attack, back to initial
       cat.speed = 1;
       cat.routeDelta = 0;
       cat.getPosition = initialRoute;
-      cat.didAttack = false;
-    } else {
-      const attackId = 0;
-      const [attackSpeed, getPosition] = attacks[attackId];
-      cat.getPosition = getPosition;
-      cat.speed = 1 / attackSpeed;
+      cat.attackIndex = null;
+    } else if (cat.attackIndex) {
+      // next sub attack
+      cat.attackIndex[1] += 1;
       cat.routeDelta = 0;
-      cat.didAttack = true;
+      cat.getPosition = curAttack![1][cat.attackIndex[1]][1];
+    } else {
+      // new attack
+      const attackId = 0;
+      const [_, getPosition] = attacks[attackId];
+      cat.getPosition = getPosition[0][1];
+      //cat.speed = 1 / attackSpeed;
+      cat.speed = 1;
+      cat.routeDelta = 0;
+      cat.attackIndex = [attackId, 0];
     }
   }
 
