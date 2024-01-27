@@ -102,7 +102,7 @@ async function initLevel() {
 
     updateTreatCount(treatCount);
 
-    bg.y += delta * 0.9;
+    bg.y += delta * 2.0;
     if (bg.y > 0) bg.y = 0;
 
     ship.updateShip();

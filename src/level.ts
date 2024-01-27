@@ -20,24 +20,12 @@ export const level1: LevelEvent[] = [
   ...waveOf5(6000, new Point(gameWidth, 200), new Point(0, 200)),
 
   ...times5(8000, () =>
-    catFactory(bezier(new Point(0, 200), new Point(100, 0), new Point(gameWidth, 300), new Point(0, gameHeight))),
+    catFactory(bezier(new Point(0, 200), new Point(150, 0), new Point(gameWidth, 300), new Point(0, gameHeight))),
   ),
   ...times5(8000, () =>
     catFactory(
-      bezier(new Point(gameWidth, 200), new Point(300, 0), new Point(gameWidth, 300), new Point(gameWidth, gameHeight)),
+      bezier(new Point(gameWidth, 200), new Point(gameWidth - 150, 0), new Point(0, 300), new Point(gameWidth, gameHeight)),
     ),
   ),
-  [
-    10000,
-    () =>
-      catFactory(
-        combine(
-          [1, interpolate(new Point(0, 200), new Point(200, 200))],
-          [2, wobblyLine(new Point(200, 200), new Point(300, 0))],
-          [1, interpolate(new Point(300, 0), new Point(0, 200))],
-        ),
-        0.5,
-      ),
-  ],
 ];
 level1.sort((a, b) => a[0] - b[0]);
