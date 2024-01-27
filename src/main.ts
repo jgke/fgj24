@@ -60,7 +60,7 @@ async function init() {
 async function initLevel() {
   stage.removeChildren();
   const bgAsset = await Assets.load("assets/bg1.png");
-  const shipAsset = await Assets.load("assets/cat.png");
+  const shipAsset = await Assets.load("assets/Hand.png");
   const catAsset = await Assets.load("assets/Basic.png");
   const treatAsset = await Assets.load("assets/Treat Projectile.png");
   const treatIconAsset = await Assets.load("assets/Treat Magazine.png");
@@ -113,9 +113,12 @@ async function initLevel() {
       }
     }
 
+    // fire treats
     if (inp.b[0] && previousTreat + 100 < Date.now() && treatCount > 0) {
       previousTreat = Date.now();
-      treats[treatId++] = treat.init(treatAsset, center(ship.ship));
+      const firePoint = center(ship.ship);
+      firePoint.y = firePoint.y - ship.ship.height / 2 + ship.ship.width / 3;
+      treats[treatId++] = treat.init(treatAsset, firePoint);
       treatCount -= 1;
     }
     for (let treatsKey in treats) {

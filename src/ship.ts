@@ -30,5 +30,5 @@ export function updateShip() {
   if (ship.x - ship.width / 2 < 0) ship.x = ship.width / 2;
   if (ship.x + ship.width / 2 > gameWidth) ship.x = gameWidth - ship.width / 2;
   if (ship.y - ship.height / 2 < 0) ship.y = ship.height / 2;
-  if (ship.y + ship.height / 2 > gameHeight) ship.y = gameHeight - ship.height / 2;
+  if (ship.y - ship.height / 2 + ship.width > gameHeight) ship.y = gameHeight + ship.height / 2 - ship.width;
 }

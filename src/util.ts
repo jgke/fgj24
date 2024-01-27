@@ -10,7 +10,10 @@ export function offscreen(sprite: Sprite): boolean {
 }
 
 export function center(sprite: Sprite): Point {
-  return new Point(sprite.x + sprite.width / 2, sprite.y + sprite.height / 2);
+  return new Point(
+    sprite.x + sprite.width / 2 - sprite.width * sprite.anchor.x,
+    sprite.y + sprite.height / 2 - sprite.height * sprite.anchor.y,
+  );
 }
 
 export function range(n: number): number[] {
