@@ -17,6 +17,8 @@ export function init(texture: Texture, route: CatRoute): Cat {
   const cat = new Sprite(texture);
   cat.x = app.renderer.width / 2;
   cat.y = app.renderer.height / 2;
+  cat.scale.x = 2;
+  cat.scale.y = 2;
 
   cat.on("pointerdown", () => {
     playEvent("event:/meow");

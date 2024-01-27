@@ -34,7 +34,7 @@ async function init() {
 
   const bgAsset = await Assets.load("assets/bg1.png");
   const shipAsset = await Assets.load("assets/cat.png");
-  const catAsset = await Assets.load("assets/cat.png");
+  const catAsset = await Assets.load("assets/Basic.png");
   const treatAsset = await Assets.load("assets/cat.png");
   const treatIconAsset = await Assets.load("assets/cat.png");
 
