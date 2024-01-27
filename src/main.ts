@@ -59,7 +59,7 @@ async function init() {
 }
 async function initLevel() {
   stage.removeChildren();
-  const bgAsset = await Assets.load("assets/bg1.png");
+  const bgAsset = await Assets.load("assets/Lvl1.png");
   const shipAsset = await Assets.load("assets/Hand.png");
   const catAsset = await Assets.load("assets/Basic.png");
   const treatAsset = await Assets.load("assets/Treat Projectile.png");
