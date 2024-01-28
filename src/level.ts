@@ -1,5 +1,16 @@
 import { Point } from "pixi.js";
-import { bezier, CatAssets, combine, hideDangerElem, interpolate, showDangerElem } from "./cat.ts";
+import {
+  appear,
+  bezier,
+  Cat,
+  CatKey,
+  combine,
+  fade,
+  hideDangerElem,
+  interpolate,
+  setPos,
+  showDangerElem,
+} from "./cat.ts";
 import { range } from "./util.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
@@ -21,7 +32,7 @@ export function times5(offset: number, fn: (n: number) => void): LevelEvent[] {
   return times(5, offset, fn);
 }
 
-export function waveOf5(offset: number, ty: keyof CatAssets, from: Point, to: Point): LevelEvent[] {
+export function waveOf5(offset: number, ty: CatKey, from: Point, to: Point): LevelEvent[] {
   return times5(offset, () => catFactory(ty, interpolate(from, to)));
 }
 
@@ -186,7 +197,7 @@ const level1Events: LevelEvent[] = [
 level1Events.sort((a, b) => a[0] - b[0]);
 
 // todo
-const level2Events = [
+const level2Events: LevelEvent[] = [
   ...waveOf5(1000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
   ...waveOf5(3000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
   ...waveOf5(5000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
@@ -198,7 +209,42 @@ const level2Events = [
 ];
 level2Events.sort((a, b) => a[0] - b[0]);
 
-const level3Events = [
+function ceiling(position: Point): () => void {
+  return () =>
+    catFactory(
+      "CeilingCat",
+      combine(
+        [1, setPos(position)],
+        [0.8, appear],
+        [
+          1,
+          ((_: number, cat: Cat) => {
+            if (!(cat as any).playing) {
+              (cat as any).playing = true;
+              cat.sprite.gotoAndPlay(0);
+            }
+            return cat.sprite.position;
+          }) as any,
+        ],
+        [
+          1,
+          ((_delta: number, cat: Cat) => {
+            if ((cat as any).playing) {
+              (cat as any).playing = false;
+              cat.sprite.animationSpeed = -0.1;
+              cat.sprite.gotoAndPlay(7);
+            }
+            return cat.sprite.position;
+          }) as any,
+        ],
+        [0.8, fade],
+      ),
+      0.2,
+    );
+}
+
+const level3Events: LevelEvent[] = [
+  [0, ceiling(new Point(200, 200))],
   ...waveOf5(1000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
   ...waveOf5(3000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
   ...waveOf5(5000, "Basic", new Point(100, 0), new Point(100, gameHeight)),

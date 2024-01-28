@@ -1,16 +1,12 @@
 import { AnimatedSprite, Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
+import { BigCat } from "./bigcat.ts";
 
-export interface CatAssets {
-  Basic: Texture;
-  Buff: Texture;
-  Zoomie: Texture;
-  Chungus: Texture;
-}
+export type CatKey = "Basic" | "Buff" | "Zoomie" | "Chungus" | "Murder" | "CeilingCat";
 
 export interface Cat {
   health: number;
-  sprite: Sprite;
+  sprite: AnimatedSprite;
   routeDelta: number;
   speed: number;
   getPosition(delta: number, cat: Cat): Point;
@@ -84,10 +80,22 @@ export function appear<T extends { sprite: Sprite }>(delta: number, cat: T): Poi
   return cat.sprite.position;
 }
 
-export function init(texture: Texture[], route: CatRoute<Cat>, speed: number = 1): Cat {
+export function fade(delta: number, cat: BigCat): Point {
+  cat.sprite.alpha = Math.max(0, 1 - delta * 1.5);
+  return cat.sprite.position;
+}
+
+export function init(texture: Texture[], route: CatRoute<Cat>, speed: number, ty: CatKey): Cat {
   const cat = new AnimatedSprite(texture);
   cat.animationSpeed = 0.1;
   cat.gotoAndPlay(Math.floor(Math.random() * texture.length));
+  if (ty === "CeilingCat") {
+    cat.gotoAndStop(0);
+    cat.alpha = 0;
+    cat.scale.x = 2;
+    cat.scale.y = 2;
+    cat.loop = false;
+  }
   cat.x = app.renderer.width / 2;
   cat.y = app.renderer.height / 2;
 
@@ -103,7 +111,15 @@ export function init(texture: Texture[], route: CatRoute<Cat>, speed: number = 1
   // Add the bunny to the scene we are building
   stage.addChild(cat);
 
-  return { health: 2, sprite: cat, routeDelta: 0, speed, getPosition: route };
+  let health = 2;
+  if (ty == "Basic") health = 2;
+  if (ty == "Buff") health = 4;
+  if (ty == "CeilingCat") health = 10;
+  if (ty == "Chungus") health = 20;
+  if (ty == "Murder") health = 1;
+  if (ty == "Zoomie") health = 2;
+
+  return { health, sprite: cat, routeDelta: 0, speed, getPosition: route };
 }
 
 export function updateCat(cat: Cat): boolean {

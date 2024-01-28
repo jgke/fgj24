@@ -1,6 +1,6 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
-import { appear, CatRoute, hideDanger, interpolate, setPos, showDanger, stay } from "./cat.ts";
+import { appear, CatRoute, fade, hideDanger, interpolate, setPos, showDanger, stay } from "./cat.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
 export interface BigCat {
@@ -38,11 +38,6 @@ export function initBigcat(texture: Texture): BigCat {
   (document.getElementById("boss-hp-value") as HTMLProgressElement).max = health;
   (document.getElementById("boss-hp-value") as HTMLProgressElement).value = health;
   return { health: health, sprite: bigcat, routeDelta: 0, attackIndex: null, speed: 1, getPosition: initialRoute };
-}
-
-function fade(delta: number, cat: BigCat): Point {
-  cat.sprite.alpha = Math.max(0, 1 - delta * 1.5);
-  return cat.sprite.position;
 }
 
 const swipe = (from: Point, to: Point, ...danger: string[]): [number, CatRoute<BigCat>][] => [

@@ -6,7 +6,7 @@ import { defaultInputState, updateInputState } from "./input";
 import { gameHeight, gameWidth } from "./const.ts";
 import * as cat from "./cat.ts";
 import * as treat from "./treat.ts";
-import { Cat, CatAssets, CatRoute, updateCat } from "./cat.ts";
+import { Cat, CatKey, CatRoute, updateCat } from "./cat.ts";
 import { Treat, updateTreat } from "./treat.ts";
 import { center, pixelPerfectScale, range } from "./util.ts";
 import { endingStory, Level, level1, level2, level3 } from "./level.ts";
@@ -37,6 +37,7 @@ let feedUnhitCount = 0;
 const speedStreakTreshold = 5000; // ms
 
 let currentLevel = 1;
+let bg: Sprite | null = null;
 
 const speedStreaks: [number, string][][] = [
   [],
@@ -82,7 +83,7 @@ const unhitStreaks: [number, string][][] = [
   ],
 ];
 
-async function loadCat(key: string, file: string, frameWidth = 46) {
+async function loadCat(key: CatKey, file: string, frameWidth = 46) {
   const sheet = await Assets.load<Texture>(file);
   const catAnimSheet = new Spritesheet(sheet, {
     frames: Object.fromEntries(
@@ -186,12 +187,13 @@ async function init() {
   await loadCat("Chungus", "assets/Chungus anim.png");
   await loadCat("Murder", "assets/Murder anim.png");
   await loadCat("Zoomie", "assets/Zoomie anim.png");
-  await loadCat("Ceilingcat", "assets/Ceilingcat anim.png", 128);
+  await loadCat("CeilingCat", "assets/Ceilingcat anim.png", 128);
 }
 
 function preInitLevel(level: Level) {
   console.log("Preinit", level.title);
   tickerFn = () => {};
+  if (bg) bg.x = -10000;
 
   document.getElementById("story-title")!.innerHTML = level.title;
   document.getElementById("story-content")!.innerHTML = level.story;
@@ -210,6 +212,24 @@ function preInitLevel(level: Level) {
   document.getElementById("start-level")!.addEventListener("click", handler);
 }
 
+function ending() {
+  console.log("ending");
+  tickerFn = () => {};
+
+  document.getElementById("story-title")!.innerHTML = "Ending";
+  document.getElementById("story-content")!.innerHTML = endingStory;
+  setTimeout(() => {
+    document.getElementById("story-content")!.scrollTop = 0;
+  }, 0);
+  document.getElementById("story")!.style.display = "";
+
+  function handler() {
+    location.reload();
+  }
+  document.getElementById("start-level")!.addEventListener("click", handler);
+  document.getElementById("start-level")!.textContent = "Restart";
+}
+
 setInterval(() => {
   updateFmod();
 });
@@ -222,14 +242,14 @@ async function initLevel(level: Level) {
   const treatIconAsset = await Assets.load<Texture>("assets/Treat Magazine.png");
   const bigcatAsset = await Assets.load<Texture>(`assets/${level.bigcat}`);
 
-  window.catFactory = (ty: keyof CatAssets, route: CatRoute<Cat>, speed = 1) =>
-    (cats[catId++] = cat.init(anims[ty], route, speed));
+  window.catFactory = (ty: CatKey, route: CatRoute<Cat>, speed = 1) =>
+    (cats[catId++] = cat.init(anims[ty], route, speed, ty));
   let bigCat: BigCat | null = null;
   window.bigCat = () => (bigCat = initBigcat(bigcatAsset));
 
   let nextEvent = 0;
 
-  const bg = new Sprite(bgAsset);
+  bg = new Sprite(bgAsset);
   bg.x = 0;
   bg.y = -bg.height + gameHeight;
   stage.addChild(bg);
@@ -265,8 +285,8 @@ async function initLevel(level: Level) {
 
     updateTreatCount(treatCount);
 
-    bg.y += delta * 2.0;
-    if (bg.y > 0) bg.y = 0;
+    bg!.y += delta * 2.0;
+    if (bg!.y > 0) bg!.y = 0;
 
     updateShip(ship);
 
@@ -308,11 +328,9 @@ async function initLevel(level: Level) {
               currentLevel = 3;
               preInitLevel(level3);
             } else if (currentLevel === 3) {
-              {
-                // ending?
-                console.warn(endingStory);
-              }
+              ending();
             }
+            return;
           }
           stage.removeChild(treats[treatsKey].sprite);
           delete treats[treatsKey];
