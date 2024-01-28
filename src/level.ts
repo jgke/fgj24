@@ -25,6 +25,29 @@ export function waveOf5(offset: number, ty: keyof CatAssets, from: Point, to: Po
   return times5(offset, () => catFactory(ty, interpolate(from, to)));
 }
 
+function boss(offset: number): LevelEvent[] {
+  return [
+    [offset, () => showDangerElem("large-enemy")],
+    [offset + 3500, () => hideDangerElem("large-enemy")],
+
+    [offset + 3000, () => showDangerElem("tl")],
+    [offset + 3000, () => showDangerElem("t")],
+    [offset + 3000, () => showDangerElem("tr")],
+
+    [
+      offset + 4000,
+      () => {
+        document.getElementById("boss-hp")!.style.opacity = "0.75";
+        bigCat();
+      },
+    ],
+
+    [offset + 5000, () => hideDangerElem("tl")],
+    [offset + 5000, () => hideDangerElem("t")],
+    [offset + 5000, () => hideDangerElem("tr")],
+  ];
+}
+
 const level1Story = `
   <h2 class="font-bold text-4xl">Hungry Cattos!</h2>
 
@@ -158,30 +181,34 @@ const level1Events: LevelEvent[] = [
   ...waveOf5(38200, "Basic", new Point(gameWidth, 300), new Point(0, 300)),
   ...waveOf5(38800, "Basic", new Point(gameWidth, 400), new Point(0, 400)),
 
-  [46000, () => showDangerElem("large-enemy")],
-  [49500, () => hideDangerElem("large-enemy")],
-
-  [49000, () => showDangerElem("tl")],
-  [49000, () => showDangerElem("t")],
-  [49000, () => showDangerElem("tr")],
-
-  [
-    50000,
-    () => {
-      document.getElementById("boss-hp")!.style.opacity = "0.75";
-      bigCat();
-    },
-  ],
-
-  [51000, () => hideDangerElem("tl")],
-  [51000, () => hideDangerElem("t")],
-  [51000, () => hideDangerElem("tr")],
+  ...boss(46000),
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 
 // todo
-const level2Events = level1Events;
-const level3Events = level1Events;
+const level2Events = [
+  ...waveOf5(1000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(3000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(5000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(7000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(9000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(11000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+
+  ...boss(46000),
+];
+level2Events.sort((a, b) => a[0] - b[0]);
+
+const level3Events = [
+  ...waveOf5(1000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(3000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(5000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(7000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(9000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(11000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+
+  ...boss(46000),
+];
+level3Events.sort((a, b) => a[0] - b[0]);
 
 export const level1: Level = {
   title: "Level 1",
