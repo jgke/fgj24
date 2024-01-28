@@ -9,6 +9,7 @@ export interface BigCat {
   routeDelta: number;
   attackIndex: [number, number] | null;
   speed: number;
+  hard: boolean;
   getPosition(delta: number, cat: BigCat): Point;
 }
 
@@ -17,7 +18,7 @@ const initialRoute: CatRoute<BigCat> = interpolate(
   new Point(gameWidth / 2, gameHeight / 4),
 );
 
-export function initBigcat(texture: Texture, _hard: boolean): BigCat {
+export function initBigcat(texture: Texture, hard: boolean): BigCat {
   const bigcat = new Sprite(texture);
   bigcat.x = app.renderer.width / 2;
   bigcat.y = app.renderer.height / 2;
@@ -37,7 +38,15 @@ export function initBigcat(texture: Texture, _hard: boolean): BigCat {
   const health = 80;
   (document.getElementById("boss-hp-value") as HTMLProgressElement).max = health;
   (document.getElementById("boss-hp-value") as HTMLProgressElement).value = health;
-  return { health: health, sprite: bigcat, routeDelta: 0, attackIndex: null, speed: 1, getPosition: initialRoute };
+  return {
+    health: health,
+    sprite: bigcat,
+    routeDelta: 0,
+    attackIndex: null,
+    speed: 1,
+    getPosition: initialRoute,
+    hard,
+  };
 }
 
 const swipe = (from: Point, to: Point, ...danger: string[]): [number, CatRoute<BigCat>][] => [
@@ -55,37 +64,59 @@ const multiSwipe = (...danger: [Point, Point, string][]): [number, CatRoute<BigC
   [1, setPos(new Point(-500, -500))],
   ...danger.map(([_1, _2, d]) => [0, showDanger(d)] as [number, CatRoute<BigCat>]),
   [1, appear],
-  ...danger.map(([from, to, _]) => [0.25, interpolate(from, to)] as [number, CatRoute<BigCat>]),
+  ...danger.map(([from, to, _]) => [0.35, interpolate(from, to)] as [number, CatRoute<BigCat>]),
   ...danger.map(([_1, _2, d]) => [0, hideDanger(d)] as [number, CatRoute<BigCat>]),
 ];
 const attacks: [number, [number, CatRoute<BigCat>][]][] = [
   [
     1,
     multiSwipe(
-      [new Point(-5000, gameHeight / 2), new Point(gameWidth + 5000, gameHeight / 2), "l"],
-      [new Point(5000, gameHeight / 2), new Point(gameWidth - 5000, gameHeight / 2), "r"],
+      [new Point(-5000, gameHeight / 4), new Point(gameWidth + 5000, gameHeight / 4), "l"],
+      [new Point(5000, gameHeight / 4), new Point(gameWidth - 5000, gameHeight / 4), "r"],
       [new Point(50, gameHeight + 5000), new Point(50, -5000), "bl"],
     ),
   ],
   [
     1,
     multiSwipe(
-      [new Point(-5000, gameHeight / 2), new Point(gameWidth + 5000, gameHeight / 2), "l"],
-      [new Point(5000, gameHeight / 2), new Point(gameWidth - 5000, gameHeight / 2), "r"],
+      [new Point(-5000, gameHeight / 4), new Point(gameWidth + 5000, gameHeight / 4), "l"],
+      [new Point(5000, gameHeight / 4), new Point(gameWidth - 5000, gameHeight / 4), "r"],
       [new Point(gameWidth - 50, gameHeight + 5000), new Point(gameWidth - 50, -5000), "br"],
     ),
   ],
-  [1, swipe(new Point(-5000, gameHeight / 2), new Point(gameWidth + 5000, gameHeight / 2), "l")],
-  [1, swipe(new Point(5000, gameHeight / 2), new Point(gameWidth - 5000, gameHeight / 2), "r")],
+  [1, swipe(new Point(-5000, gameHeight / 4), new Point(gameWidth + 5000, gameHeight / 4), "l")],
+  [1, swipe(new Point(5000, gameHeight / 4), new Point(gameWidth - 5000, gameHeight / 4), "r")],
   [1, swipe(new Point(50, gameHeight + 5000), new Point(50, -5000), "bl")],
   [1, swipe(new Point(gameWidth - 50, gameHeight + 5000), new Point(gameWidth - 50, -5000), "br")],
+  [1, swipe(new Point(gameWidth / 2, gameHeight + 5000), new Point(gameWidth / 2, -5000), "b")],
+];
+
+const hardAttacks: [number, [number, CatRoute<BigCat>][]][] = [
+  [1, swipe(new Point(gameWidth / 2, gameHeight + 5000), new Point(gameWidth / 2, -5000), "b")],
+  [
+    1,
+    multiSwipe(
+      [new Point(-5000, gameHeight / 4), new Point(gameWidth + 5000, gameHeight / 4), "l"],
+      [new Point(5000, gameHeight / 4), new Point(gameWidth - 5000, gameHeight / 4), "r"],
+      [new Point(50, gameHeight + 5000), new Point(50, -5000), "bl"],
+    ),
+  ],
+  [
+    1,
+    multiSwipe(
+      [new Point(-5000, gameHeight / 4), new Point(gameWidth + 5000, gameHeight / 4), "l"],
+      [new Point(5000, gameHeight / 4), new Point(gameWidth - 5000, gameHeight / 4), "r"],
+      [new Point(gameWidth - 50, gameHeight + 5000), new Point(gameWidth - 50, -5000), "br"],
+    ),
+  ],
 ];
 
 export function updateBigCat(cat: BigCat): boolean {
+  const list = cat.hard ? hardAttacks : attacks;
   cat.routeDelta += (delta / 100) * cat.speed;
   (document.getElementById("boss-hp-value") as HTMLProgressElement).value = cat.health;
 
-  const curAttack = cat.attackIndex ? attacks[cat.attackIndex[0]] : null;
+  const curAttack = cat.attackIndex ? list[cat.attackIndex[0]] : null;
   const curSubAttack = cat.attackIndex ? curAttack![1][cat.attackIndex[1]] : null;
 
   if (cat.routeDelta > (curSubAttack?.[0] ?? 1)) {
@@ -103,8 +134,8 @@ export function updateBigCat(cat: BigCat): boolean {
       cat.getPosition = curAttack![1][cat.attackIndex[1]][1];
     } else {
       // new attack
-      const attackId = Math.floor(Math.random() * attacks.length);
-      const [_, getPosition] = attacks[attackId];
+      const attackId = Math.floor(Math.random() * list.length);
+      const [_, getPosition] = list[attackId];
       cat.getPosition = getPosition[0][1];
       //cat.speed = 1 / attackSpeed;
       cat.speed = 1;

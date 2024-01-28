@@ -281,7 +281,7 @@ async function initLevel(level: Level) {
       return restartLevel();
     }
 
-    while (nextEvent < level.events.length && level.events[nextEvent][0] < tick) {
+    while (nextEvent < level.events.length && level.events[nextEvent][0] < tick * 100) {
       level.events[nextEvent][1]();
       nextEvent++;
     }
@@ -396,6 +396,13 @@ async function initLevel(level: Level) {
             delete cats[catsKey];
           }
           break;
+        }
+      }
+      if (bigCat) {
+        if (bigCat.sprite.getBounds().intersects(shipRect)) {
+          invul = 30;
+          feedUnhitCount = 0;
+          ship.health -= 1;
         }
       }
     }
