@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{15364323-1a42-47bc-b7ec-77198225bcd8}">
+		<property name="assetPath">
+			<value>Kill/Combos/Ludicrous Kill.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>5.2053333333333329</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{0e53d81d-793e-407a-aeeb-c50181c97e11}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -47,12 +47,12 @@ const speedStreaks: [number, string][] = [
 ];
 
 const unhitStreaks: [number, string][] = [
-  [5, "Killing Spree"],
-  [10, "Rampage"],
-  [15, "Dominating"],
-  [20, "Unstoppable"],
-  [25, "Godlike"],
-  [30, "WICKED SICK"],
+  [5, "event:/nohit_feed_1"],
+  [10, "event:/nohit_feed_2"],
+  [15, "event:/nohit_feed_3"],
+  [20, "event:/nohit_feed_4"],
+  [25, "event:/nohit_feed_5"],
+  [30, "event:/nohit_feed_6"],
 ];
 
 async function init() {
@@ -148,6 +148,10 @@ function preInitLevel(level: Level) {
   document.getElementById("start-level")!.addEventListener("click", handler);
 }
 
+setInterval(() => {
+  updateFmod();
+});
+
 async function initLevel(level: Level) {
   console.log("Init", level.title);
   const bgAsset = await Assets.load<Texture>(`assets/${level.bg}`);
@@ -189,7 +193,6 @@ async function initLevel(level: Level) {
 
   // Listen for frame updates
   tickerFn = (delta) => {
-    updateFmod();
     window.tick = Date.now() - startTime;
     window.delta = delta;
     window.inp = updateInputState();
@@ -286,7 +289,7 @@ async function initLevel(level: Level) {
 
             for (let i = 0; i < unhitStreaks.length; i++) {
               if (unhitStreaks[i][0] == feedUnhitCount) {
-                console.warn(unhitStreaks[i][1]);
+                playEvent(unhitStreaks[i][1]);
               }
             }
           }

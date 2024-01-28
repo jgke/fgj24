@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="EncodableAsset" id="{4a2483d3-dd2c-421e-867f-a9afdac1249c}">
+		<property name="assetPath">
+			<value>Kill/Combos/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{0e53d81d-793e-407a-aeeb-c50181c97e11}</destination>
+		</relationship>
+	</object>
+</objects>

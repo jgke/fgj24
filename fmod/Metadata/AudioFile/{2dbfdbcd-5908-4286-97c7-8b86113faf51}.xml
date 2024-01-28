@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{2dbfdbcd-5908-4286-97c7-8b86113faf51}">
+		<property name="assetPath">
+			<value>Feed/Combos/Mega Feed.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>3.0293333333333332</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{0e53d81d-793e-407a-aeeb-c50181c97e11}</destination>
+		</relationship>
+	</object>
+</objects>

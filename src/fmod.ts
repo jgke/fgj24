@@ -38,57 +38,65 @@ function CHECK_RESULT(result: any) {
 function preInitialize() {}
 
 function main() {
-  const out: any = {};
+  try {
+    const out: any = {};
 
-  console.log("Initializing FMOD");
+    console.log("Initializing FMOD");
 
-  CHECK_RESULT(FMOD.Studio_System_Create(out));
-  gSystem = out.val;
-  CHECK_RESULT(gSystem.getCoreSystem(out));
-  gSystemCore = out.val;
+    CHECK_RESULT(FMOD.Studio_System_Create(out));
+    gSystem = out.val;
+    CHECK_RESULT(gSystem.getCoreSystem(out));
+    gSystemCore = out.val;
 
-  CHECK_RESULT(gSystemCore.setDSPBufferSize(2048, 2));
+    CHECK_RESULT(gSystemCore.setDSPBufferSize(2048, 2));
 
-  CHECK_RESULT(gSystemCore.getDriverInfo(0, null, null, out, null, null));
-  CHECK_RESULT(gSystemCore.setSoftwareFormat(out.val, FMOD.SPEAKERMODE_DEFAULT, 0));
+    CHECK_RESULT(gSystemCore.getDriverInfo(0, null, null, out, null, null));
+    CHECK_RESULT(gSystemCore.setSoftwareFormat(out.val, FMOD.SPEAKERMODE_DEFAULT, 0));
 
-  // 1024 virtual channels
-  CHECK_RESULT(gSystem.initialize(1024, FMOD.STUDIO_INIT_NORMAL, FMOD.INIT_NORMAL | FMOD.LIVEUPDATE, null));
+    // 1024 virtual channels
+    CHECK_RESULT(gSystem.initialize(1024, FMOD.STUDIO_INIT_NORMAL, FMOD.INIT_NORMAL | FMOD.LIVEUPDATE, null));
 
-  loadBank(bankData);
-  loadBank(bankStringData);
+    const bank = loadBank(bankData);
+    const stringBank = loadBank(bankStringData);
 
-  loadEvent("event:/meow");
-  loadEvent("event:/music");
+    CHECK_RESULT(bank.loadSampleData());
+    CHECK_RESULT(stringBank.loadSampleData());
 
-  // Set up iOS/Chrome workaround. WebAudio is not allowed to start unless screen is touched or button is clicked.
-  function resumeAudio() {
-    if (!gAudioResumed) {
-      console.log("Resetting audio driver based on user input.");
+    //loadEvent("event:/meow");
+    //loadEvent("event:/music");
 
-      CHECK_RESULT(gSystemCore.mixerSuspend());
-      CHECK_RESULT(gSystemCore.mixerResume());
+    // Set up iOS/Chrome workaround. WebAudio is not allowed to start unless screen is touched or button is clicked.
+    function resumeAudio() {
+      if (!gAudioResumed) {
+        console.log("Resetting audio driver based on user input.");
 
-      gAudioResumed = true;
+        CHECK_RESULT(gSystemCore.mixerSuspend());
+        CHECK_RESULT(gSystemCore.mixerResume());
+
+        gAudioResumed = true;
+      }
     }
-  }
 
-  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-  if (iOS) {
-    window.addEventListener("touchend", resumeAudio, false);
-  } else {
-    document.addEventListener("click", resumeAudio);
-  }
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    if (iOS) {
+      window.addEventListener("touchend", resumeAudio, false);
+    } else {
+      document.addEventListener("click", resumeAudio);
+    }
 
-  console.log("FMOD initialized!");
-  return FMOD.OK;
+    console.log("FMOD initialized!");
+    return FMOD.OK;
+  } catch (e) {
+    console.error("ERROR INITIALIZING FMOD:", e);
+    throw e;
+  }
 }
 
 export function playEvent(soundId: string) {
-  console.log("Playing event", soundId);
+  loadEvent(soundId);
   const descr = events[soundId];
   if (!descr) {
-    console.log("Event not found!");
+    console.log("Event not found!", soundId);
     console.log("Available events:", Object.keys(events));
     return;
   }
@@ -106,10 +114,11 @@ export function playEvent(soundId: string) {
 function loadBank(data: any) {
   const bankInfo = new FMOD.STUDIO_BANK_INFO();
   bankInfo.userdata = data;
-  const bankHandle = {};
+  const bankHandle: any = {};
   CHECK_RESULT(
     gSystem.loadBankMemory(data, data.length, FMOD.STUDIO_LOAD_MEMORY, FMOD.STUDIO_LOAD_BANK_NORMAL, bankHandle),
   );
+  return bankHandle.val;
 }
 
 function loadEvent(ev: any) {
