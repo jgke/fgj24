@@ -37,13 +37,13 @@ const speedStreakTreshold = 5000; // ms
 let currentLevel = 1;
 
 const speedStreaks: [number, string][] = [
-  [2, "Double Kill"],
-  [3, "Multi Kill"],
-  [4, "Mega Kill"],
-  [5, "Ultra Kill"],
-  [6, "MONSTER KILL"],
-  [7, "LUDICROUS KILL"],
-  [8, "HOLY *MEOW*"],
+  [2, "event:/fast_feed_1"],
+  [3, "event:/fast_feed_2"],
+  [4, "event:/fast_feed_3"],
+  [5, "event:/fast_feed_4"],
+  [6, "event:/fast_feed_5"],
+  [7, "event:/fast_feed_6"],
+  [8, "event:/fast_feed_7"],
 ];
 
 const unhitStreaks: [number, string][] = [
@@ -283,7 +283,7 @@ async function initLevel(level: Level) {
 
             for (let i = 0; i < speedStreaks.length; i++) {
               if (speedStreaks[i][0] == feedSpeedCount) {
-                console.warn(speedStreaks[i][1]);
+                playEvent(speedStreaks[i][1]);
               }
             }
 
