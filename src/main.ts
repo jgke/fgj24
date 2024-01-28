@@ -281,7 +281,7 @@ async function initLevel(level: Level) {
       return restartLevel();
     }
 
-    while (nextEvent < level.events.length && level.events[nextEvent][0] < tick * 100) {
+    while (nextEvent < level.events.length && level.events[nextEvent][0] < tick) {
       level.events[nextEvent][1]();
       nextEvent++;
     }

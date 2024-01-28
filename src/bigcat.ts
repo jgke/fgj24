@@ -2,7 +2,6 @@ import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 import { appear, CatRoute, fade, hideDanger, interpolate, setPos, showDanger, stay } from "./cat.ts";
 import { gameHeight, gameWidth } from "./const.ts";
-import { timesInterval } from "./level.ts";
 
 export interface BigCat {
   health: number;
