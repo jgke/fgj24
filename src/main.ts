@@ -1,14 +1,14 @@
 import "./style.css";
 import { Application, Assets, Container, Sprite, Spritesheet, Texture } from "pixi.js";
 
-import { initFmod, playEvent, updateFmod } from "./fmod";
+import { initFmod, playEvent, playMusic, updateFmod } from "./fmod";
 import { defaultInputState, updateInputState } from "./input";
 import { gameHeight, gameWidth } from "./const.ts";
 import * as cat from "./cat.ts";
 import * as treat from "./treat.ts";
 import { Cat, CatKey, CatRoute, updateCat } from "./cat.ts";
 import { Treat, updateTreat } from "./treat.ts";
-import { center, pixelPerfectScale, range } from "./util.ts";
+import { firepoint, pixelPerfectScale, range } from "./util.ts";
 import { endingStory, Level, level1, level2, level3 } from "./level.ts";
 import { initTreatCount, updateTreatCount } from "./treatCount.ts";
 import { initShip, updateShip } from "./ship.ts";
@@ -36,7 +36,7 @@ let feedSpeedCount = 0;
 let feedUnhitCount = 0;
 const speedStreakTreshold = 5000; // ms
 
-let currentLevel = 1;
+let currentLevel = 3;
 let bg: Sprite | null = null;
 
 const speedStreaks: [number, string][][] = [
@@ -111,8 +111,10 @@ async function loadCat(key: CatKey, file: string, frameWidth = 46) {
   console.log(catAnimSheet);
 }
 
+let stopsound: (() => void) | null = null;
+
 async function init() {
-  playEvent("event:/music");
+  stopsound = playMusic("event:/music");
   const scale = pixelPerfectScale(gameWidth, gameHeight, window.innerWidth, window.innerHeight);
 
   window.inp = defaultInputState;
@@ -235,6 +237,10 @@ setInterval(() => {
 });
 
 async function initLevel(level: Level) {
+  if (currentLevel === 3) {
+    stopsound?.();
+    stopsound = playMusic("event:/music2");
+  }
   console.log("Init", level.title);
   const bgAsset = await Assets.load<Texture>(`assets/${level.bg}`);
   const shipAsset = await Assets.load<Texture>("assets/Hand.png");
@@ -245,7 +251,7 @@ async function initLevel(level: Level) {
   window.catFactory = (ty: CatKey, route: CatRoute<Cat>, speed = 1) =>
     (cats[catId++] = cat.init(anims[ty], route, speed, ty));
   let bigCat: BigCat | null = null;
-  window.bigCat = () => (bigCat = initBigcat(bigcatAsset));
+  window.bigCat = (hard: boolean) => (bigCat = initBigcat(bigcatAsset, hard));
 
   let nextEvent = 0;
 
@@ -254,7 +260,7 @@ async function initLevel(level: Level) {
   bg.y = -bg.height + gameHeight;
   stage.addChild(bg);
 
-  const ship = initShip(shipAsset);
+  window.ship = initShip(shipAsset);
   initTreatCount(treatIconAsset);
   initHealthCount(healthPickupAnimation!.animations.health);
 
@@ -300,8 +306,7 @@ async function initLevel(level: Level) {
     // fire treats
     if (inp.b[0] && previousTreat + 100 < Date.now() && treatCount > 0) {
       previousTreat = Date.now();
-      const firePoint = center(ship.sprite);
-      firePoint.y = firePoint.y - ship.sprite.height / 2 + ship.sprite.width / 3;
+      const firePoint = firepoint(ship.sprite);
       treats[treatId++] = treat.init(treatAsset, firePoint);
       treatCount -= 1;
     }
@@ -340,6 +345,7 @@ async function initLevel(level: Level) {
       for (let catsKey in cats) {
         if (cats[catsKey].sprite.getBounds().intersects(treatRect)) {
           cats[catsKey].health -= 1;
+          if (cats[catsKey].ty == "Chungus") ship.health -= 1;
           if (cats[catsKey].health <= 0) {
             stage.removeChild(cats[catsKey].sprite);
             delete cats[catsKey];

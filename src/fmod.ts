@@ -111,6 +111,24 @@ export function playEvent(soundId: string) {
    */
 }
 
+export function playMusic(soundId: string): () => void {
+  loadEvent(soundId);
+  const descr = events[soundId];
+  if (!descr) {
+    console.log("Event not found!", soundId);
+    console.log("Available events:", Object.keys(events));
+    return () => {};
+  }
+
+  const eventInstance: any = {};
+  CHECK_RESULT(descr.val.createInstance(eventInstance));
+  CHECK_RESULT(eventInstance.val.start());
+  return () => {
+    eventInstance.val.stop(FMOD.STUDIO_STOP_ALLOWFADEOUT);
+    CHECK_RESULT(eventInstance.val.release());
+  };
+}
+
 function loadBank(data: any) {
   const bankInfo = new FMOD.STUDIO_BANK_INFO();
   bankInfo.userdata = data;

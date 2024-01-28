@@ -16,6 +16,12 @@ export function center(sprite: Sprite): Point {
   );
 }
 
+export function firepoint(sprite: Sprite): Point {
+  const point = center(sprite);
+  point.y = point.y - sprite.height / 2 + sprite.width / 3;
+  return point;
+}
+
 export function range(n: number): number[] {
   return [...Array(n)].map((_, i) => i);
 }

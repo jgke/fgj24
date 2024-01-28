@@ -1,6 +1,7 @@
 import { AnimatedSprite, Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 import { BigCat } from "./bigcat.ts";
+import { firepoint } from "./util.ts";
 
 export type CatKey = "Basic" | "Buff" | "Zoomie" | "Chungus" | "Murder" | "CeilingCat";
 
@@ -9,6 +10,7 @@ export interface Cat {
   sprite: AnimatedSprite;
   routeDelta: number;
   speed: number;
+  ty: CatKey;
   getPosition(delta: number, cat: Cat): Point;
 }
 export type CatRoute<T extends { sprite: Sprite }> = (delta: number, cat: T) => Point;
@@ -32,6 +34,10 @@ export function combine<T extends { sprite: Sprite }>(...routes: [number, CatRou
 
 export function interpolate<T extends { sprite: Sprite }>(from: Point, to: Point): CatRoute<T> {
   return (delta) => new Point(from.x + delta * (to.x - from.x), from.y + delta * (to.y - from.y));
+}
+
+export function interpolateToShip<T extends { sprite: Sprite }>(from: Point): CatRoute<T> {
+  return (delta, cat) => bezier(from, cat.sprite.position, firepoint(ship.sprite))(delta, cat);
 }
 
 export function wobblyLine<T extends { sprite: Sprite }>(from: Point, to: Point): CatRoute<T> {
@@ -119,7 +125,7 @@ export function init(texture: Texture[], route: CatRoute<Cat>, speed: number, ty
   if (ty == "Murder") health = 1;
   if (ty == "Zoomie") health = 2;
 
-  return { health, sprite: cat, routeDelta: 0, speed, getPosition: route };
+  return { health, sprite: cat, routeDelta: 0, speed, getPosition: route, ty };
 }
 
 export function updateCat(cat: Cat): boolean {

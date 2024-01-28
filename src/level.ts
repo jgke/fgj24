@@ -8,6 +8,7 @@ import {
   fade,
   hideDangerElem,
   interpolate,
+  interpolateToShip,
   setPos,
   showDangerElem,
 } from "./cat.ts";
@@ -36,7 +37,7 @@ export function waveOf5(offset: number, ty: CatKey, from: Point, to: Point): Lev
   return times5(offset, () => catFactory(ty, interpolate(from, to)));
 }
 
-function boss(offset: number): LevelEvent[] {
+function boss(offset: number, hard: boolean): LevelEvent[] {
   return [
     [offset, () => showDangerElem("large-enemy")],
     [offset + 3500, () => hideDangerElem("large-enemy")],
@@ -49,7 +50,7 @@ function boss(offset: number): LevelEvent[] {
       offset + 4000,
       () => {
         document.getElementById("boss-hp")!.style.opacity = "0.75";
-        bigCat();
+        bigCat(hard);
       },
     ],
 
@@ -192,7 +193,7 @@ const level1Events: LevelEvent[] = [
   ...waveOf5(38200, "Basic", new Point(gameWidth, 300), new Point(0, 300)),
   ...waveOf5(38800, "Basic", new Point(gameWidth, 400), new Point(0, 400)),
 
-  ...boss(46000),
+  ...boss(46000, false),
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 
@@ -205,7 +206,7 @@ const level2Events: LevelEvent[] = [
   ...waveOf5(9000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
   ...waveOf5(11000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
 
-  ...boss(46000),
+  ...boss(46000, false),
 ];
 level2Events.sort((a, b) => a[0] - b[0]);
 
@@ -214,7 +215,8 @@ function ceiling(position: Point): () => void {
     catFactory(
       "CeilingCat",
       combine(
-        [1, setPos(position)],
+        [0.2, setPos(new Point(-1000, -1000))],
+        [0.2, setPos(position)],
         [0.8, appear],
         [
           1,
@@ -244,15 +246,95 @@ function ceiling(position: Point): () => void {
 }
 
 const level3Events: LevelEvent[] = [
-  [0, ceiling(new Point(200, 200))],
-  ...waveOf5(1000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(3000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(5000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(7000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(9000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  [
+    1000,
+    () => catFactory("Basic", interpolate(new Point(gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight)), 0.5),
+  ],
+  [
+    2000,
+    () => catFactory("Basic", interpolate(new Point(gameWidth / 4, 0), new Point(gameWidth / 4, gameHeight)), 0.5),
+  ],
+  [
+    3000,
+    () =>
+      catFactory(
+        "Basic",
+        interpolate(new Point((3 * gameWidth) / 4, 0), new Point((3 * gameWidth) / 4, gameHeight)),
+        0.5,
+      ),
+  ],
+  [
+    3500,
+    () => catFactory("Basic", interpolate(new Point(gameWidth / 2, 0), new Point(gameWidth / 4, gameHeight)), 0.5),
+  ],
+  [
+    3800,
+    () => catFactory("Basic", interpolate(new Point(gameWidth / 2, 0), new Point(gameWidth / 4, gameHeight)), 0.5),
+  ],
+  ...times(12, 4500, () => {
+    catFactory(
+      "Basic",
+      interpolate(new Point(Math.random() * gameWidth, 0), new Point(Math.random() * gameWidth, gameHeight)),
+    );
+  }),
+  ...times(8, 5200, () => {
+    catFactory(
+      "Basic",
+      interpolate(new Point(Math.random() * gameWidth, 0), new Point(Math.random() * gameWidth, gameHeight)),
+    );
+  }),
+  ...times(4, 7300, () => {
+    catFactory(
+      "Basic",
+      interpolate(new Point(Math.random() * gameWidth, 0), new Point(Math.random() * gameWidth, gameHeight)),
+    );
+  }),
+  [11000, () => catFactory("Murder", interpolateToShip(new Point(400, 0)))],
   ...waveOf5(11000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(11700, "Basic", new Point(150, 0), new Point(150, gameHeight)),
+  ...waveOf5(12400, "Basic", new Point(200, 0), new Point(200, gameHeight)),
+  ...waveOf5(13100, "Basic", new Point(250, 0), new Point(250, gameHeight)),
+  ...waveOf5(13800, "Basic", new Point(300, 0), new Point(300, gameHeight)),
+  ...waveOf5(14500, "Basic", new Point(350, 0), new Point(350, gameHeight)),
 
-  ...boss(46000),
+  ...waveOf5(16000, "Basic", new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight)),
+  ...waveOf5(16700, "Basic", new Point(gameWidth - 150, 0), new Point(gameWidth - 150, gameHeight)),
+  ...waveOf5(17400, "Basic", new Point(gameWidth - 200, 0), new Point(gameWidth - 200, gameHeight)),
+  ...waveOf5(18100, "Basic", new Point(gameWidth - 250, 0), new Point(gameWidth - 250, gameHeight)),
+  ...waveOf5(18800, "Basic", new Point(gameWidth - 300, 0), new Point(gameWidth - 300, gameHeight)),
+  ...waveOf5(19500, "Basic", new Point(gameWidth - 350, 0), new Point(gameWidth - 350, gameHeight)),
+
+  [20000, ceiling(new Point(100, 200))],
+
+  [24000, () => catFactory("Murder", interpolateToShip(new Point(gameWidth - 100, 0)))],
+  [24500, () => catFactory("Murder", interpolateToShip(new Point(100, 0)))],
+  [25000, () => catFactory("Murder", interpolateToShip(new Point(gameWidth / 2, 0)))],
+  [25500, () => catFactory("Murder", interpolateToShip(new Point(100, 0)))],
+  [26000, () => catFactory("Murder", interpolateToShip(new Point(gameWidth - 100, 0)))],
+
+  ...times(12, 28000, () => {
+    catFactory(
+      "Basic",
+      interpolate(new Point(Math.random() * gameWidth, 0), new Point(Math.random() * gameWidth, gameHeight)),
+    );
+  }),
+  ...times(8, 28800, () => {
+    catFactory(
+      "Basic",
+      interpolate(new Point(Math.random() * gameWidth, 0), new Point(Math.random() * gameWidth, gameHeight)),
+    );
+  }),
+  ...times(4, 29100, () => {
+    catFactory(
+      "Basic",
+      interpolate(new Point(Math.random() * gameWidth, 0), new Point(Math.random() * gameWidth, gameHeight)),
+    );
+  }),
+  [31000, ceiling(new Point(100, 200))],
+  [32000, ceiling(new Point(500, 350))],
+  [33000, ceiling(new Point(300, 275))],
+
+  ...boss(46000, true),
 ];
 level3Events.sort((a, b) => a[0] - b[0]);
 

@@ -2,7 +2,7 @@ import { Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
-interface Ship {
+export interface Ship {
   sprite: Sprite;
   health: number;
 }

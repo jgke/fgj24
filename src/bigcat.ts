@@ -17,7 +17,7 @@ const initialRoute: CatRoute<BigCat> = interpolate(
   new Point(gameWidth / 2, gameHeight / 4),
 );
 
-export function initBigcat(texture: Texture): BigCat {
+export function initBigcat(texture: Texture, _hard: boolean): BigCat {
   const bigcat = new Sprite(texture);
   bigcat.x = app.renderer.width / 2;
   bigcat.y = app.renderer.height / 2;
