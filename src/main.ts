@@ -36,23 +36,48 @@ const speedStreakTreshold = 5000; // ms
 
 let currentLevel = 1;
 
-const speedStreaks: [number, string][] = [
-  [2, "event:/fast_feed_1"],
-  [3, "event:/fast_feed_2"],
-  [4, "event:/fast_feed_3"],
-  [5, "event:/fast_feed_4"],
-  [6, "event:/fast_feed_5"],
-  [7, "event:/fast_feed_6"],
-  [8, "event:/fast_feed_7"],
+const speedStreaks: [number, string][][] = [
+  [],
+  [],
+  [
+    [2, "event:/fast_feed_1"],
+    [3, "event:/fast_feed_2"],
+    [4, "event:/fast_feed_3"],
+    [5, "event:/fast_feed_4"],
+    [6, "event:/fast_feed_5"],
+    [7, "event:/fast_feed_6"],
+    [8, "event:/fast_feed_7"],
+  ],
+  [
+    [2, "event:/fast_kill_1"],
+    [3, "event:/fast_kill_2"],
+    [4, "event:/fast_kill_3"],
+    [5, "event:/fast_kill_4"],
+    [6, "event:/fast_kill_5"],
+    [7, "event:/fast_kill_6"],
+    [8, "event:/fast_kill_7"],
+  ],
 ];
 
-const unhitStreaks: [number, string][] = [
-  [5, "event:/nohit_feed_1"],
-  [10, "event:/nohit_feed_2"],
-  [15, "event:/nohit_feed_3"],
-  [20, "event:/nohit_feed_4"],
-  [25, "event:/nohit_feed_5"],
-  [30, "event:/nohit_feed_6"],
+const unhitStreaks: [number, string][][] = [
+  [],
+  [],
+  [
+    [5, "event:/nohit_feed_1"],
+    [10, "event:/nohit_feed_2"],
+    [15, "event:/nohit_feed_3"],
+    [20, "event:/nohit_feed_4"],
+    [25, "event:/nohit_feed_5"],
+    [30, "event:/nohit_feed_6"],
+  ],
+  [
+    [5, "event:/nohit_kill_1"],
+    [10, "event:/nohit_kill_2"],
+    [15, "event:/nohit_kill_3"],
+    [20, "event:/nohit_kill_4"],
+    [25, "event:/nohit_kill_5"],
+    [30, "event:/nohit_kill_6"],
+  ],
 ];
 
 async function init() {
@@ -201,7 +226,7 @@ async function initLevel(level: Level) {
       return restartLevel();
     }
 
-    while (nextEvent < level.events.length && level.events[nextEvent][0] < tick) {
+    while (nextEvent < level.events.length && level.events[nextEvent][0] < tick * 10) {
       level.events[nextEvent][1]();
       nextEvent++;
     }
@@ -281,15 +306,15 @@ async function initLevel(level: Level) {
             feedUnhitCount += 1;
             feedTimer = Date.now();
 
-            for (let i = 0; i < speedStreaks.length; i++) {
-              if (speedStreaks[i][0] == feedSpeedCount) {
-                playEvent(speedStreaks[i][1]);
+            for (let i = 0; i < speedStreaks[currentLevel].length; i++) {
+              if (speedStreaks[currentLevel][i][0] == feedSpeedCount) {
+                playEvent(speedStreaks[currentLevel][i][1]);
               }
             }
 
-            for (let i = 0; i < unhitStreaks.length; i++) {
-              if (unhitStreaks[i][0] == feedUnhitCount) {
-                playEvent(unhitStreaks[i][1]);
+            for (let i = 0; i < unhitStreaks[currentLevel].length; i++) {
+              if (unhitStreaks[currentLevel][i][0] == feedUnhitCount) {
+                playEvent(unhitStreaks[currentLevel][i][1]);
               }
             }
           }
