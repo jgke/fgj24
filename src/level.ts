@@ -209,27 +209,27 @@ const level2Events: LevelEvent[] = [
   ...waveOf5(9000, "Zoomie", new Point(0, 0), new Point(gameWidth, gameHeight), 2),
   ...waveOf5(9750, "Zoomie", new Point(gameWidth, 0), new Point(0, gameHeight), 2),
 
-  ...times(3, 15000, () =>
+  ...times(2, 15000, () =>
     catFactory(
       "Buff", interpolate (new Point(100, 0), new Point(100, gameHeight)), 0.75
     ),
   ),
-  ...times(3, 15000, () =>
+  ...times(2, 15000, () =>
     catFactory(
       "Buff", interpolate (new Point(225, 0), new Point(225, gameHeight)), 0.75,
     ),
   ),
-  ...times(3, 15000, () =>
+  ...times(2, 15000, () =>
     catFactory(
       "Buff", interpolate (new Point(gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight)), 0.75,
     ),
   ),
-  ...times(3, 15000, () =>
+  ...times(2, 15000, () =>
     catFactory(
       "Buff", interpolate (new Point(gameWidth - 225, 0), new Point(gameWidth - 225, gameHeight)), 0.75,
     ),
   ),
-  ...times(3, 15000, () =>
+  ...times(2, 15000, () =>
     catFactory(
       "Buff", interpolate (new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight)), 0.75,
     ),
@@ -239,35 +239,35 @@ const level2Events: LevelEvent[] = [
   ...waveOf5(17600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
   ...waveOf5(18200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
   ...waveOf5(18800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
-  ...waveOf5(19400, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+  ...waveOf5(19400, "Zoomie", new Point(0, 500), new Point(gameWidth, 500), 1.5),
 
-  [16500, () => showDangerElem("bl")],
-  ...times(5, 17500, () =>
+  [20250, () => showDangerElem("bl")],
+  ...times(7, 20500, () =>
     catFactory(
       "Chungus",
       combine(
-        [1, interpolate(new Point(100, gameHeight - 200), new Point(100, 0))],
+        [1, interpolate(new Point(100, gameHeight), new Point(100, gameHeight - 100))],
         [
           2,
           bezier(
-            new Point(gameWidth - 100, 0),
-            new Point(gameWidth - 100, gameHeight - 200),
-            new Point(100, gameHeight - 200),
+            new Point(100, gameHeight - 100),
+            new Point(200, gameHeight / 2),
+            new Point(gameWidth, 0),
           ),
         ], 
       ), 0.5,
     ),
   ),
-  [18500, () => hideDangerElem("bl")],
+  [22000, () => hideDangerElem("bl")],
   
-  ...waveOf5(19000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
-  ...waveOf5(19600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
-  ...waveOf5(20200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
-  ...waveOf5(20800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
-  ...waveOf5(21400, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+  ...waveOf5(22000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
+  ...waveOf5(13600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
+  ...waveOf5(23200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
+  ...waveOf5(23800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+  ...waveOf5(24400, "Zoomie", new Point(0, 500), new Point(gameWidth, 500), 1.5),
 
-  [19250, () => showDangerElem("br")],
-  ...times(5, 19500, () =>
+  [25250, () => showDangerElem("br")],
+  ...times(7, 25500, () =>
     catFactory(
       "Chungus",
       combine(
@@ -276,17 +276,25 @@ const level2Events: LevelEvent[] = [
           2,
           bezier(
             new Point(gameWidth - 100, gameHeight - 100),
-            new Point(gameWidth - 150, gameHeight - 200),
-            new Point(gameWidth - 250, gameHeight - 300),
+            new Point(gameWidth - 200, gameHeight / 2),
+            new Point(0, 0),
           ),
         ], 
       ), 0.5,
     ),
   ),
-  [20500, () => hideDangerElem("br")],
+  [25700, () => hideDangerElem("br")],
+
+  ...waveOf5(25000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
+  ...waveOf5(16600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
+  ...waveOf5(26200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
+  ...waveOf5(26800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+  ...waveOf5(27400, "Zoomie", new Point(0, 500), new Point(gameWidth, 500), 1.5),
 
   ...boss(46000, false),
 ];
+
+
 
 level2Events.sort((a, b) => a[0] - b[0]);
 
