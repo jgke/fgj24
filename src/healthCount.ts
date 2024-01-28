@@ -4,6 +4,7 @@ import { gameWidth } from "./const.ts";
 let healthIcons: Sprite[] = [];
 
 export function initHealthCount(textures: Texture[]) {
+  healthIcons = [];
   for (let x = 0; x < 10; x++) {
     for (let y = 0; y < 3; y++) {
       let i = x * 10 + y;

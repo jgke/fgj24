@@ -194,9 +194,26 @@ async function init() {
 }
 
 function preInitLevel(level: Level) {
+  stage.removeChildren();
   console.log("Preinit", level.title);
   tickerFn = () => {};
   if (bg) bg.x = -10000;
+
+  [
+    "onscreen-tl",
+    "onscreen-t",
+    "onscreen-tr",
+    "onscreen-bl",
+    "onscreen-b",
+    "onscreen-br",
+    "onscreen-lt",
+    "onscreen-l",
+    "onscreen-lb",
+    "onscreen-rt",
+    "onscreen-r",
+    "onscreen-rb",
+    "onscreen-large-enemy",
+  ].forEach((id) => (document.getElementById(id)!.style.opacity = "0"));
 
   document.getElementById("story-title")!.innerHTML = level.title;
   document.getElementById("story-content")!.innerHTML = level.story;

@@ -88,29 +88,40 @@
       </div>
     </div>
 
-    <div id="loader" class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl w-5/6">
-      <h1 class="text-4xl font-bold underline">Cat Feeding Game</h1>
-      <p class="sr-only">The interactive content is probably not accessible.</p>
-      <button id="start-playing" class="mt-10 p-2 border rounded bg-gray-200">Start playing</button>
+    <div
+      id="loader"
+      class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl w-5/6 h-5/6"
+    >
+      <div class="flex flex-col items-center w-full h-full overflow-y-scroll">
+        <h1 class="text-4xl font-bold underline">Feed the Cats</h1>
+        <p class="sr-only">The interactive content is probably not accessible.</p>
+        <h2 class="font-bold text-4xl">Credits</h2>
+        <ul>
+          <li>Jaakko Hannikainen - Code</li>
+          <li>Jani Suutarinen - Writing and Graphics</li>
+          <li>Tinji ?? - Music</li>
+        </ul>
+        <button id="start-playing" class="mt-10 p-2 border rounded bg-gray-200">Start playing</button>
 
-      <div class="mt-10">
-        <h2 class="font-bold text-4xl">This game has been created with the following technologies</h2>
+        <div class="mt-10">
+          <h2 class="font-bold text-4xl">Used technologies</h2>
 
-        <div class="flex">
-          <a href="https://pixijs.com/">
-            <img class="w-40 h-40 bg-black" src="./assets/pixijs-logo.svg" alt="PixiJS logo" />
-          </a>
-          <p class="ml-4 font-bold">Game Engine: PixiJS</p>
-        </div>
+          <div class="flex">
+            <a href="https://pixijs.com/">
+              <img class="w-40 h-40 bg-black" src="./assets/pixijs-logo.svg" alt="PixiJS logo" />
+            </a>
+            <p class="ml-4 font-bold">Game Engine: PixiJS</p>
+          </div>
 
-        <div class="flex mt-2">
-          <a href="https://fmod.com/">
-            <img class="w-40 h-40 bg-black" src="./assets/fmod-logo.svg" alt="FMOD logo" />
-          </a>
-          <p class="ml-4 font-bold">
-            <span class="whitespace-nowrap">Audio Engine: FMOD Studio</span><br />
-            <span class="whitespace-nowrap">by Firelight Technologies Pty Ltd.</span>
-          </p>
+          <div class="flex mt-2">
+            <a href="https://fmod.com/">
+              <img class="w-40 h-40 bg-black" src="./assets/fmod-logo.svg" alt="FMOD logo" />
+            </a>
+            <p class="ml-4 font-bold">
+              <span class="whitespace-nowrap">Audio Engine: FMOD Studio</span><br />
+              <span class="whitespace-nowrap">by Firelight Technologies Pty Ltd.</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
