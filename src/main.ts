@@ -124,6 +124,7 @@ async function init() {
   document.getElementById("app")!.appendChild(app.view as any);
 
   window.stage = new Container();
+  window.stage.sortableChildren = true;
   stage.width = gameWidth;
   stage.height = gameHeight;
   stage.scale.x = scale;
@@ -218,6 +219,7 @@ function ending() {
   console.log("ending");
   tickerFn = () => {};
 
+  document.getElementById("boss-hp")!.style.opacity = "0";
   document.getElementById("story-title")!.innerHTML = "Ending";
   document.getElementById("story-content")!.innerHTML = endingStory;
   setTimeout(() => {
@@ -256,6 +258,7 @@ async function initLevel(level: Level) {
   let nextEvent = 0;
 
   bg = new Sprite(bgAsset);
+  bg.zIndex = -100;
   bg.x = 0;
   bg.y = -bg.height + gameHeight;
   stage.addChild(bg);
