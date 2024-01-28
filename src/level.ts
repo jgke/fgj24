@@ -28,6 +28,9 @@ export interface Level {
 export function times(count: number, offset: number, fn: (n: number) => void): LevelEvent[] {
   return [...range(count)].map((n) => [offset + 500 * n, () => fn(n)]);
 }
+export function timesInterval(count: number, offset: number, fn: (n: number) => void, interval: number): LevelEvent[] {
+  return [...range(count)].map((n) => [offset + interval * n, () => fn(n)]);
+}
 
 export function times5(offset: number, fn: (n: number) => void): LevelEvent[] {
   return times(5, offset, fn);
@@ -421,6 +424,28 @@ const level3Events: LevelEvent[] = [
   [31000, ceiling(new Point(100, 200))],
   [32000, ceiling(new Point(500, 350))],
   [33000, ceiling(new Point(300, 275))],
+
+
+  [39000, () => showDangerElem("tl")],
+  ...timesInterval(100,40000, () => catFactory("Zoomie", interpolate(new Point(10, 0), new Point(10, gameHeight)), 5), 20),
+  ...timesInterval(100,40022, () => catFactory("Zoomie", interpolate(new Point(150, 0), new Point(150, gameHeight)), 5), 20),
+  ...timesInterval(100,40043, () => catFactory("Zoomie", interpolate(new Point(85, 0), new Point(85, gameHeight)), 5), 20),
+  ...timesInterval(100,40064, () => catFactory("Zoomie", interpolate(new Point(200, 0), new Point(200, gameHeight)), 5), 20),
+  [41000, () => hideDangerElem("tl")],
+
+  [41500, () => showDangerElem("tr")],
+  ...timesInterval(100,42000, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 10, 0), new Point(gameWidth - 10, gameHeight)), 5), 20),
+  ...timesInterval(100,42022, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 150, 0), new Point(gameWidth - 150, gameHeight)), 5), 20),
+  ...timesInterval(100,42043, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 85, 0), new Point(gameWidth - 85, gameHeight)), 5), 20),
+  ...timesInterval(100,42064, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 200, 0), new Point(gameWidth - 200, gameHeight)), 5), 20),
+  [43500, () => hideDangerElem("tr")],
+
+  [40500, () => showDangerElem("t")],
+  ...timesInterval(100,41000, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 - 10, 0), new Point(gameWidth/2 - 10, gameHeight)), 5), 20),
+  ...timesInterval(100,41021, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 + 50, 0), new Point(gameWidth/2 + 50, gameHeight)), 5), 20),
+  ...timesInterval(100,41042, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 - 85, 0), new Point(gameWidth/2 - 85, gameHeight)), 5), 20),
+  ...timesInterval(100,41063, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 + 85, 0), new Point(gameWidth/2 + 85, gameHeight)), 5), 20),
+  [42500, () => hideDangerElem("t")],
 
   ...boss(46000, true),
 ];
