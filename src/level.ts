@@ -51,58 +51,58 @@ function boss(offset: number): LevelEvent[] {
 const level1Story = `
   <h2 class="font-bold text-4xl">Hungry Cattos!</h2>
 
-  <p>The cats are hungry! move your hand with the arrow keys. Throw treats with the space bar.
+  <p>The cats are hungry! move your hand with the arrow keys. Throw treats with the space bar.<br>
   Don't let the cats hit you! They're not very nice when they're this hungry.</p>
 
-  <p class="mt-2">Cats leave you alone and disappear when they're satiated.
-  You can only throw treats if you have treats in your hand!
-  You can see how many treats are in your hand in the top left corner.
+  <p class="mt-2">Cats leave you alone and disappear when they're satiated.<br>
+  You can only throw treats if you have treats in your hand!<br>
+  You can see how many treats are in your hand in the top left corner.<br>
   You constantly pick new treats from your pocket with your other hand.</p>
 
-  <p class="mt-2">You can see how many band-aids you have left in the top right corner.
-  If you run out of band-aids, you have to stop feeding the cats!
+  <p class="mt-2">You can see how many band-aids you have left in the top right corner.<br>
+  If you run out of band-aids, you have to stop feeding the cats!<br>
   Can't get blood everywhere. This level is suitable for the whole family after all! </p>
 `;
 
 const level2Story = `
   <h2 class="font-bold text-4xl">Hunky Bulky Big Toms, Lumbering Chonkers and Zoomie Goblins</h2>
 
-  <p>Different kinds of cats take different amounts of treats to be satiated.
-  The grey Hunky Bulky Big Toms are a bit slower, but take more treats to be satiated.
-  Don't feed the white Lumbering Chonkers! They're very slow, and they don't need to get slower.
-  If you feed a Chonker, you lose a band-aid. It makes sense, I swear.
+  <p>Different kinds of cats take different amounts of treats to be satiated.<br>
+  The grey Hunky Bulky Big Toms are a bit slower, but take more treats to be satiated.<br>
+  Don't feed the white Lumbering Chonkers! They're very slow, and they don't need to get slower.<br>
+  If you feed a Chonker, you lose a band-aid. It makes sense, I swear.<br>
   The solid orange Zoomie Goblins move faster but take less treats to be satiated.</p>
 `;
 
 const level3Story = `
   <h2 class="font-bold text-4xl">Masters of the Universe!</h2>
 
-  <p>We all know cats are the real bosses on earth.
+  <p>We all know cats are the real bosses on earth.<br>
   Not much of a stretch to find yout they rule the galaxy and the entire universe, too, right?</p>
 
-  <p class="mt-2">New cats!
-  The Spotted Hissy Fits run straight towards you! Luckily they only take one treat to be satiated.
-  Ceilingcats peek from the fabric of reality itself for only a few seconds!
+  <p class="mt-2">New cats!<br>
+  The Spotted Hissy Fits run straight towards you! Luckily they only take one treat to be satiated.<br>
+  Ceilingcats peek from the fabric of reality itself for only a few seconds!<br>
   Feed them before they disappear again!</p>
 `;
 
 export const endingStory = `
   <h2 class="font-bold text-4xl">Galactic Medal of Honor!</h2>
 
-  <p>Gud hooman! U'z got a medul for ur meritus servis! thx!
+  <p>Gud hooman! U'z got a medul for ur meritus servis! thx!<br>
   O, wayt, lemme toornz dis inteepretur off...</p>
 
-  <p class="mt-2"> The Galactic Feline Federation sincerely commends you for your exemplary service!
-  We could not have defeated the filthy Pan-Felid Alliance mongrels without your help!
-  What? Feeding? Satiated? -- Voidsperson, you are no fresh private!
+  <p class="mt-2"> The Galactic Feline Federation sincerely commends you for your exemplary service!<br>
+  We could not have defeated the filthy Pan-Felid Alliance mongrels without your help!<br>
+  What? Feeding? Satiated? -- Voidsperson, you are no fresh private!<br>
   Did you really believe those augmentations?</p>
 
-  <p class="mt-2"> Cats disappearing into thin air, endless treats materializing in its pocketses...
-  Band-aids! Your ship takes damage from hospital craft just the same as enemy fighters, obviously
+  <p class="mt-2"> Cats disappearing into thin air, endless treats materializing in its pocketses...<br>
+  Band-aids! Your ship takes damage from hospital craft just the same as enemy fighters, obviously<br>
   And whose arm has three elbows, huh?</p>
 
-  <p class="mt-2"> Humans. So gullible. I bet you still think we haven't caught the laser pointer.
-  Here's your medal. Enjoy it. And I assure you, this is no translation error;
+  <p class="mt-2"> Humans. So gullible. I bet you still think we haven't caught the laser pointer.<br>
+  Here's your medal. Enjoy it. And I assure you, this is no translation error;<br>
   Kthxbai.</p>
 `;
 
