@@ -33,8 +33,8 @@ export function times5(offset: number, fn: (n: number) => void): LevelEvent[] {
   return times(5, offset, fn);
 }
 
-export function waveOf5(offset: number, ty: CatKey, from: Point, to: Point): LevelEvent[] {
-  return times5(offset, () => catFactory(ty, interpolate(from, to)));
+export function waveOf5(offset: number, ty: CatKey, from: Point, to: Point, speed = 1): LevelEvent[] {
+  return times5(offset, () => catFactory(ty, interpolate(from, to), speed));
 }
 
 function boss(offset: number, hard: boolean): LevelEvent[] {
@@ -197,17 +197,97 @@ const level1Events: LevelEvent[] = [
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 
-// todo
 const level2Events: LevelEvent[] = [
-  ...waveOf5(1000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(3000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(5000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(7000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(9000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
-  ...waveOf5(11000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(1000, "Buff", new Point(100, 0), new Point(100, gameHeight), 0.75),
+  ...waveOf5(3000, "Buff", new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight), 0.75),
+  [4750, () => showDangerElem("bl")],
+  ...waveOf5(5000, "Chungus", new Point(100, gameHeight), new Point(100, 0), 0.50),
+  [6500, () => hideDangerElem("bl")],
+  [6750, () => showDangerElem("br")],
+  ...waveOf5(7000, "Chungus", new Point(gameWidth - 100, gameHeight), new Point(gameWidth - 100, 0), 0.50),
+  [8500, () => hideDangerElem("br")],
+  ...waveOf5(9000, "Zoomie", new Point(0, 0), new Point(gameWidth, gameHeight), 2),
+  ...waveOf5(9750, "Zoomie", new Point(gameWidth, 0), new Point(0, gameHeight), 2),
+
+  ...times(3, 15000, () =>
+    catFactory(
+      "Buff", interpolate (new Point(100, 0), new Point(100, gameHeight)), 0.75
+    ),
+  ),
+  ...times(3, 15000, () =>
+    catFactory(
+      "Buff", interpolate (new Point(225, 0), new Point(225, gameHeight)), 0.75,
+    ),
+  ),
+  ...times(3, 15000, () =>
+    catFactory(
+      "Buff", interpolate (new Point(gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight)), 0.75,
+    ),
+  ),
+  ...times(3, 15000, () =>
+    catFactory(
+      "Buff", interpolate (new Point(gameWidth - 225, 0), new Point(gameWidth - 225, gameHeight)), 0.75,
+    ),
+  ),
+  ...times(3, 15000, () =>
+    catFactory(
+      "Buff", interpolate (new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight)), 0.75,
+    ),
+  ),
+  
+  ...waveOf5(17000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
+  ...waveOf5(17600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
+  ...waveOf5(18200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
+  ...waveOf5(18800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+  ...waveOf5(19400, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+
+  [16500, () => showDangerElem("bl")],
+  ...times(5, 17500, () =>
+    catFactory(
+      "Chungus",
+      combine(
+        [1, interpolate(new Point(100, gameHeight - 200), new Point(100, 0))],
+        [
+          2,
+          bezier(
+            new Point(gameWidth - 100, 0),
+            new Point(gameWidth - 100, gameHeight - 200),
+            new Point(100, gameHeight - 200),
+          ),
+        ], 
+      ), 0.5,
+    ),
+  ),
+  [18500, () => hideDangerElem("bl")],
+  
+  ...waveOf5(19000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
+  ...waveOf5(19600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
+  ...waveOf5(20200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
+  ...waveOf5(20800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+  ...waveOf5(21400, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
+
+  [19250, () => showDangerElem("br")],
+  ...times(5, 19500, () =>
+    catFactory(
+      "Chungus",
+      combine(
+        [1, interpolate(new Point(gameWidth - 100, gameHeight), new Point(gameWidth - 100, gameHeight - 100))],
+        [
+          2,
+          bezier(
+            new Point(gameWidth - 100, gameHeight - 100),
+            new Point(gameWidth - 150, gameHeight - 200),
+            new Point(gameWidth - 250, gameHeight - 300),
+          ),
+        ], 
+      ), 0.5,
+    ),
+  ),
+  [20500, () => hideDangerElem("br")],
 
   ...boss(46000, false),
 ];
+
 level2Events.sort((a, b) => a[0] - b[0]);
 
 function ceiling(position: Point): () => void {
