@@ -98,7 +98,6 @@ const attacks: [number, [number, CatRoute<BigCat>][]][] = [
   [1, swipe(new Point(5000, gameHeight / 4), new Point(gameWidth - 5000, gameHeight / 4), "r")],
   [1, swipe(new Point(50, gameHeight + 5000), new Point(50, -5000), "bl")],
   [1, swipe(new Point(gameWidth - 50, gameHeight + 5000), new Point(gameWidth - 50, -5000), "br")],
-  [1, swipe(new Point(gameWidth / 2, gameHeight + 5000), new Point(gameWidth / 2, -5000), "b")],
 ];
 
 const hardAttacks: [number, [number, CatRoute<BigCat>][]][] = [
