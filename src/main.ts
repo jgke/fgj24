@@ -29,6 +29,8 @@ let invul = 0;
 let tickerFn = (_: number) => {};
 let healthPickupAnimation: Spritesheet | null = null;
 
+const anims: { [key: string]: Texture[] } = {};
+
 let feedTimer = 0;
 let feedSpeedCount = 0;
 let feedUnhitCount = 0;
@@ -79,6 +81,34 @@ const unhitStreaks: [number, string][][] = [
     [30, "event:/nohit_kill_6"],
   ],
 ];
+
+async function loadCat(key: string, file: string, frameWidth = 46) {
+  const sheet = await Assets.load<Texture>(file);
+  const catAnimSheet = new Spritesheet(sheet, {
+    frames: Object.fromEntries(
+      [...range(8)].map((x) => [
+        `${key}${x}.png`,
+        {
+          frame: { x: x * frameWidth, y: 0, w: frameWidth, h: 128 },
+          spriteSourceSize: { x: 0, y: 0, w: frameWidth, h: 128 },
+          sourceSize: { w: frameWidth, h: 128 },
+        },
+      ]),
+    ),
+    animations: {
+      [`${key}`]: [...range(8).map((n) => `${key}${n}.png`)],
+    },
+    meta: {
+      image: file,
+      format: "RGBA8888",
+      size: { w: 368, h: 128 },
+      scale: "1",
+    },
+  });
+  await catAnimSheet.parse();
+  anims[key] = catAnimSheet.animations[key];
+  console.log(catAnimSheet);
+}
 
 async function init() {
   playEvent("event:/music");
@@ -150,6 +180,13 @@ async function init() {
     },
   });
   await healthPickupAnimation.parse();
+
+  await loadCat("Basic", "assets/Basic anim.png");
+  await loadCat("Buff", "assets/Buff anim.png");
+  await loadCat("Chungus", "assets/Chungus anim.png");
+  await loadCat("Murder", "assets/Murder anim.png");
+  await loadCat("Zoomie", "assets/Zoomie anim.png");
+  await loadCat("Ceilingcat", "assets/Ceilingcat anim.png", 128);
 }
 
 function preInitLevel(level: Level) {
@@ -183,17 +220,10 @@ async function initLevel(level: Level) {
   const shipAsset = await Assets.load<Texture>("assets/Hand.png");
   const treatAsset = await Assets.load<Texture>("assets/Treat Projectile.png");
   const treatIconAsset = await Assets.load<Texture>("assets/Treat Magazine.png");
-  const bigcatAsset = await Assets.load<Texture>("assets/cat.png");
-
-  const catAssets: CatAssets = {
-    Buff: await Assets.load<Texture>("assets/Buff.png"),
-    Basic: await Assets.load<Texture>("assets/Basic.png"),
-    Zoomie: await Assets.load<Texture>("assets/Zoomie.png"),
-    Chungus: await Assets.load<Texture>("assets/Chungus.png"),
-  };
+  const bigcatAsset = await Assets.load<Texture>(`assets/${level.bigcat}`);
 
   window.catFactory = (ty: keyof CatAssets, route: CatRoute<Cat>, speed = 1) =>
-    (cats[catId++] = cat.init(catAssets[ty], route, speed));
+    (cats[catId++] = cat.init(anims[ty], route, speed));
   let bigCat: BigCat | null = null;
   window.bigCat = () => (bigCat = initBigcat(bigcatAsset));
 
@@ -206,7 +236,6 @@ async function initLevel(level: Level) {
 
   const ship = initShip(shipAsset);
   initTreatCount(treatIconAsset);
-  console.log(healthPickupAnimation);
   initHealthCount(healthPickupAnimation!.animations.health);
 
   const startTime = Date.now();

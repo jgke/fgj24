@@ -1,4 +1,4 @@
-import { Point, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 
 export interface CatAssets {
@@ -60,11 +60,9 @@ export function bezier<T extends { sprite: Sprite }>(...points: Point[]): CatRou
 
 export const setPos = (pos: Point) => interpolate(pos, pos);
 export function showDangerElem(danger: string) {
-  console.log("Showing", danger);
   document.getElementById("onscreen-" + danger)!.style.opacity = "0.75";
 }
 export function hideDangerElem(danger: string) {
-  console.log("Hiding", danger);
   document.getElementById("onscreen-" + danger)!.style.opacity = "0";
 }
 export function showDanger<T extends { sprite: Sprite }>(danger: string): CatRoute<T> {
@@ -86,8 +84,10 @@ export function appear<T extends { sprite: Sprite }>(delta: number, cat: T): Poi
   return cat.sprite.position;
 }
 
-export function init(texture: Texture, route: CatRoute<Cat>, speed: number = 1): Cat {
-  const cat = new Sprite(texture);
+export function init(texture: Texture[], route: CatRoute<Cat>, speed: number = 1): Cat {
+  const cat = new AnimatedSprite(texture);
+  cat.animationSpeed = 0.1;
+  cat.gotoAndPlay(Math.floor(Math.random() * texture.length));
   cat.x = app.renderer.width / 2;
   cat.y = app.renderer.height / 2;
 

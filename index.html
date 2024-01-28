@@ -62,13 +62,28 @@
       </div>
 
       <div
+        id="boss-hp"
+        class="flex-col absolute w-full h-full flex text-[50px] justify-between items-center leading-none pointer-events-none"
+        style="opacity: 0"
+      >
+        <div></div>
+        <progress id="boss-hp-value" class="bg-yellow-200 bg-opacity-40 text-center w-5/6 h-5" max="200" value="75">
+          Large cat approaching
+        </progress>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <div
         id="onscreen-large-enemy"
         class="flex-col absolute w-full h-full flex text-[50px] justify-between items-center leading-none pointer-events-none"
         style="opacity: 0"
       >
         <div></div>
         <div></div>
-        <div class="bg-yellow-200 bg-opacity-40 text-center">Large enemy approaching</div>
+        <div class="bg-yellow-200 bg-opacity-40 text-center">Large cat approaching</div>
         <div></div>
       </div>
     </div>

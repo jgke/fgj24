@@ -9,6 +9,7 @@ export interface Level {
   title: string;
   story: string;
   bg: string;
+  bigcat: string;
   events: LevelEvent[];
 }
 
@@ -164,7 +165,13 @@ const level1Events: LevelEvent[] = [
   [49000, () => showDangerElem("t")],
   [49000, () => showDangerElem("tr")],
 
-  [50000, () => bigCat()],
+  [
+    50000,
+    () => {
+      document.getElementById("boss-hp")!.style.opacity = "0.75";
+      bigCat();
+    },
+  ],
 
   [51000, () => hideDangerElem("tl")],
   [51000, () => hideDangerElem("t")],
@@ -176,6 +183,24 @@ level1Events.sort((a, b) => a[0] - b[0]);
 const level2Events = level1Events;
 const level3Events = level1Events;
 
-export const level1: Level = { title: "Level 1", bg: "Lvl1.png", story: level1Story, events: level1Events };
-export const level2: Level = { title: "Level 2", bg: "Lvl1.png", story: level2Story, events: level2Events };
-export const level3: Level = { title: "Level 3", bg: "Lvl3.png", story: level3Story, events: level3Events };
+export const level1: Level = {
+  title: "Level 1",
+  bg: "Lvl1.png",
+  bigcat: "BigCatto.png",
+  story: level1Story,
+  events: level1Events,
+};
+export const level2: Level = {
+  title: "Level 2",
+  bg: "Lvl1.png",
+  bigcat: "BigCatto.png",
+  story: level2Story,
+  events: level2Events,
+};
+export const level3: Level = {
+  title: "Level 3",
+  bg: "Lvl3.png",
+  bigcat: "GlowCatto.png",
+  story: level3Story,
+  events: level3Events,
+};
