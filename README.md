@@ -1,4 +1,4 @@
-# fgj24
+# Feed the Cats
 
 Cat feeding game, hosted live at https://jgke.fi/games/fgj24/dist
 
