@@ -264,7 +264,7 @@ const level2Events: LevelEvent[] = [
   [22000, () => hideDangerElem("bl")],
   
   ...waveOf5(22000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
-  ...waveOf5(13600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
+  ...waveOf5(23600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
   ...waveOf5(23200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
   ...waveOf5(23800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
   ...waveOf5(24400, "Zoomie", new Point(0, 500), new Point(gameWidth, 500), 1.5),
@@ -289,12 +289,26 @@ const level2Events: LevelEvent[] = [
   [25700, () => hideDangerElem("br")],
 
   ...waveOf5(25000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
-  ...waveOf5(16600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
+  ...waveOf5(26600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
   ...waveOf5(26200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
   ...waveOf5(26800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
   ...waveOf5(27400, "Zoomie", new Point(0, 500), new Point(gameWidth, 500), 1.5),
 
-  ...boss(46000, false),
+
+  ...waveOf5(30000, "Zoomie", new Point (gameWidth * 0.25, 0), new Point(gameWidth * 0.25, gameHeight), 1.5),
+  [
+    31500, () => catFactory("Buff", interpolate(new Point(gameWidth * 0.33, 0), new Point(gameWidth * 0.25, gameHeight)), 0.75),
+  ],
+  ...waveOf5(31500, "Zoomie", new Point (gameWidth * 0.75, 0), new Point(gameWidth * 0.75, gameHeight), 1.5),
+  [
+    33000, () => catFactory("Buff", interpolate(new Point(gameWidth * 0.66, 0), new Point(gameWidth * 0.75, gameHeight)), 0.75),
+  ],
+  ...waveOf5(33000, "Zoomie", new Point (gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight), 1.5),
+  [
+    34500, () => catFactory("Buff", interpolate(new Point(gameWidth * 0.33, 0), new Point(gameWidth * 0.33, gameHeight)), 0.75),
+  ],
+
+  ...boss(42000, false),
 ];
 
 

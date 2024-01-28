@@ -145,7 +145,7 @@ async function init() {
     });
   }
   app.ticker.add((delta) => tickerFn(delta));
-  preInitLevel(level3);
+  preInitLevel(level1);
 
   // preload assets
   await Promise.all([
