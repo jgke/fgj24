@@ -36,7 +36,7 @@ let feedSpeedCount = 0;
 let feedUnhitCount = 0;
 const speedStreakTreshold = 5000; // ms
 
-let currentLevel = 3;
+let currentLevel = 1;
 let bg: Sprite | null = null;
 
 const speedStreaks: [number, string][][] = [

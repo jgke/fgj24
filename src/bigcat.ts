@@ -2,6 +2,7 @@ import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
 import { appear, CatRoute, fade, hideDanger, interpolate, setPos, showDanger, stay } from "./cat.ts";
 import { gameHeight, gameWidth } from "./const.ts";
+import { timesInterval } from "./level.ts";
 
 export interface BigCat {
   health: number;
@@ -67,6 +68,15 @@ const multiSwipe = (...danger: [Point, Point, string][]): [number, CatRoute<BigC
   ...danger.map(([from, to, _]) => [0.35, interpolate(from, to)] as [number, CatRoute<BigCat>]),
   ...danger.map(([_1, _2, d]) => [0, hideDanger(d)] as [number, CatRoute<BigCat>]),
 ];
+
+function beam(center: number): CatRoute<BigCat> {
+  return (_delta, cat) => {
+    const x = center + (Math.random() - 0.5) * 100;
+    catFactory("Zoomie", interpolate(new Point(x, 0), new Point(x, gameHeight)), 5);
+    return cat.sprite.position;
+  };
+}
+
 const attacks: [number, [number, CatRoute<BigCat>][]][] = [
   [
     1,
@@ -92,7 +102,18 @@ const attacks: [number, [number, CatRoute<BigCat>][]][] = [
 ];
 
 const hardAttacks: [number, [number, CatRoute<BigCat>][]][] = [
-  [1, swipe(new Point(gameWidth / 2, gameHeight + 5000), new Point(gameWidth / 2, -5000), "b")],
+  [
+    1,
+    [
+      [1, stay],
+      [1, fade],
+      [1, setPos(new Point(-1000, -1000))],
+      [0, showDanger("b")],
+      [1, appear],
+      [1, beam(gameWidth / 2)],
+      [0, hideDanger("b")],
+    ],
+  ],
   [
     1,
     multiSwipe(

@@ -204,40 +204,26 @@ const level2Events: LevelEvent[] = [
   ...waveOf5(1000, "Buff", new Point(100, 0), new Point(100, gameHeight), 0.75),
   ...waveOf5(3000, "Buff", new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight), 0.75),
   [4750, () => showDangerElem("bl")],
-  ...waveOf5(5000, "Chungus", new Point(100, gameHeight), new Point(100, 0), 0.50),
+  ...waveOf5(5000, "Chungus", new Point(100, gameHeight), new Point(100, 0), 0.5),
   [6500, () => hideDangerElem("bl")],
   [6750, () => showDangerElem("br")],
-  ...waveOf5(7000, "Chungus", new Point(gameWidth - 100, gameHeight), new Point(gameWidth - 100, 0), 0.50),
+  ...waveOf5(7000, "Chungus", new Point(gameWidth - 100, gameHeight), new Point(gameWidth - 100, 0), 0.5),
   [8500, () => hideDangerElem("br")],
   ...waveOf5(9000, "Zoomie", new Point(0, 0), new Point(gameWidth, gameHeight), 2),
   ...waveOf5(9750, "Zoomie", new Point(gameWidth, 0), new Point(0, gameHeight), 2),
 
+  ...times(2, 15000, () => catFactory("Buff", interpolate(new Point(100, 0), new Point(100, gameHeight)), 0.75)),
+  ...times(2, 15000, () => catFactory("Buff", interpolate(new Point(225, 0), new Point(225, gameHeight)), 0.75)),
   ...times(2, 15000, () =>
-    catFactory(
-      "Buff", interpolate (new Point(100, 0), new Point(100, gameHeight)), 0.75
-    ),
+    catFactory("Buff", interpolate(new Point(gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight)), 0.75),
   ),
   ...times(2, 15000, () =>
-    catFactory(
-      "Buff", interpolate (new Point(225, 0), new Point(225, gameHeight)), 0.75,
-    ),
+    catFactory("Buff", interpolate(new Point(gameWidth - 225, 0), new Point(gameWidth - 225, gameHeight)), 0.75),
   ),
   ...times(2, 15000, () =>
-    catFactory(
-      "Buff", interpolate (new Point(gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight)), 0.75,
-    ),
+    catFactory("Buff", interpolate(new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight)), 0.75),
   ),
-  ...times(2, 15000, () =>
-    catFactory(
-      "Buff", interpolate (new Point(gameWidth - 225, 0), new Point(gameWidth - 225, gameHeight)), 0.75,
-    ),
-  ),
-  ...times(2, 15000, () =>
-    catFactory(
-      "Buff", interpolate (new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight)), 0.75,
-    ),
-  ),
-  
+
   ...waveOf5(17000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
   ...waveOf5(17600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
   ...waveOf5(18200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
@@ -250,19 +236,13 @@ const level2Events: LevelEvent[] = [
       "Chungus",
       combine(
         [1, interpolate(new Point(100, gameHeight), new Point(100, gameHeight - 100))],
-        [
-          2,
-          bezier(
-            new Point(100, gameHeight - 100),
-            new Point(200, gameHeight / 2),
-            new Point(gameWidth, 0),
-          ),
-        ], 
-      ), 0.5,
+        [2, bezier(new Point(100, gameHeight - 100), new Point(200, gameHeight / 2), new Point(gameWidth, 0))],
+      ),
+      0.5,
     ),
   ),
   [22000, () => hideDangerElem("bl")],
-  
+
   ...waveOf5(22000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100), 1.5),
   ...waveOf5(23600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200), 1.5),
   ...waveOf5(23200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300), 1.5),
@@ -282,8 +262,9 @@ const level2Events: LevelEvent[] = [
             new Point(gameWidth - 200, gameHeight / 2),
             new Point(0, 0),
           ),
-        ], 
-      ), 0.5,
+        ],
+      ),
+      0.5,
     ),
   ),
   [25700, () => hideDangerElem("br")],
@@ -294,24 +275,27 @@ const level2Events: LevelEvent[] = [
   ...waveOf5(26800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400), 1.5),
   ...waveOf5(27400, "Zoomie", new Point(0, 500), new Point(gameWidth, 500), 1.5),
 
-
-  ...waveOf5(30000, "Zoomie", new Point (gameWidth * 0.25, 0), new Point(gameWidth * 0.25, gameHeight), 1.5),
+  ...waveOf5(30000, "Zoomie", new Point(gameWidth * 0.25, 0), new Point(gameWidth * 0.25, gameHeight), 1.5),
   [
-    31500, () => catFactory("Buff", interpolate(new Point(gameWidth * 0.33, 0), new Point(gameWidth * 0.25, gameHeight)), 0.75),
+    31500,
+    () =>
+      catFactory("Buff", interpolate(new Point(gameWidth * 0.33, 0), new Point(gameWidth * 0.25, gameHeight)), 0.75),
   ],
-  ...waveOf5(31500, "Zoomie", new Point (gameWidth * 0.75, 0), new Point(gameWidth * 0.75, gameHeight), 1.5),
+  ...waveOf5(31500, "Zoomie", new Point(gameWidth * 0.75, 0), new Point(gameWidth * 0.75, gameHeight), 1.5),
   [
-    33000, () => catFactory("Buff", interpolate(new Point(gameWidth * 0.66, 0), new Point(gameWidth * 0.75, gameHeight)), 0.75),
+    33000,
+    () =>
+      catFactory("Buff", interpolate(new Point(gameWidth * 0.66, 0), new Point(gameWidth * 0.75, gameHeight)), 0.75),
   ],
-  ...waveOf5(33000, "Zoomie", new Point (gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight), 1.5),
+  ...waveOf5(33000, "Zoomie", new Point(gameWidth / 2, 0), new Point(gameWidth / 2, gameHeight), 1.5),
   [
-    34500, () => catFactory("Buff", interpolate(new Point(gameWidth * 0.33, 0), new Point(gameWidth * 0.33, gameHeight)), 0.75),
+    34500,
+    () =>
+      catFactory("Buff", interpolate(new Point(gameWidth * 0.33, 0), new Point(gameWidth * 0.33, gameHeight)), 0.75),
   ],
 
   ...boss(42000, false),
 ];
-
-
 
 level2Events.sort((a, b) => a[0] - b[0]);
 
@@ -439,26 +423,89 @@ const level3Events: LevelEvent[] = [
   [32000, ceiling(new Point(500, 350))],
   [33000, ceiling(new Point(300, 275))],
 
-
   [39000, () => showDangerElem("tl")],
-  ...timesInterval(100,40000, () => catFactory("Zoomie", interpolate(new Point(10, 0), new Point(10, gameHeight)), 5), 20),
-  ...timesInterval(100,40022, () => catFactory("Zoomie", interpolate(new Point(150, 0), new Point(150, gameHeight)), 5), 20),
-  ...timesInterval(100,40043, () => catFactory("Zoomie", interpolate(new Point(85, 0), new Point(85, gameHeight)), 5), 20),
-  ...timesInterval(100,40064, () => catFactory("Zoomie", interpolate(new Point(200, 0), new Point(200, gameHeight)), 5), 20),
+  ...timesInterval(
+    100,
+    40000,
+    () => catFactory("Zoomie", interpolate(new Point(10, 0), new Point(10, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    40022,
+    () => catFactory("Zoomie", interpolate(new Point(150, 0), new Point(150, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    40043,
+    () => catFactory("Zoomie", interpolate(new Point(85, 0), new Point(85, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    40064,
+    () => catFactory("Zoomie", interpolate(new Point(200, 0), new Point(200, gameHeight)), 5),
+    20,
+  ),
   [41000, () => hideDangerElem("tl")],
 
   [41500, () => showDangerElem("tr")],
-  ...timesInterval(100,42000, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 10, 0), new Point(gameWidth - 10, gameHeight)), 5), 20),
-  ...timesInterval(100,42022, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 150, 0), new Point(gameWidth - 150, gameHeight)), 5), 20),
-  ...timesInterval(100,42043, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 85, 0), new Point(gameWidth - 85, gameHeight)), 5), 20),
-  ...timesInterval(100,42064, () => catFactory("Zoomie", interpolate(new Point(gameWidth - 200, 0), new Point(gameWidth - 200, gameHeight)), 5), 20),
+  ...timesInterval(
+    100,
+    42000,
+    () => catFactory("Zoomie", interpolate(new Point(gameWidth - 10, 0), new Point(gameWidth - 10, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    42022,
+    () => catFactory("Zoomie", interpolate(new Point(gameWidth - 150, 0), new Point(gameWidth - 150, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    42043,
+    () => catFactory("Zoomie", interpolate(new Point(gameWidth - 85, 0), new Point(gameWidth - 85, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    42064,
+    () => catFactory("Zoomie", interpolate(new Point(gameWidth - 200, 0), new Point(gameWidth - 200, gameHeight)), 5),
+    20,
+  ),
   [43500, () => hideDangerElem("tr")],
 
   [40500, () => showDangerElem("t")],
-  ...timesInterval(100,41000, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 - 10, 0), new Point(gameWidth/2 - 10, gameHeight)), 5), 20),
-  ...timesInterval(100,41021, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 + 50, 0), new Point(gameWidth/2 + 50, gameHeight)), 5), 20),
-  ...timesInterval(100,41042, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 - 85, 0), new Point(gameWidth/2 - 85, gameHeight)), 5), 20),
-  ...timesInterval(100,41063, () => catFactory("Zoomie", interpolate(new Point(gameWidth/2 + 85, 0), new Point(gameWidth/2 + 85, gameHeight)), 5), 20),
+  ...timesInterval(
+    100,
+    41000,
+    () =>
+      catFactory("Zoomie", interpolate(new Point(gameWidth / 2 - 10, 0), new Point(gameWidth / 2 - 10, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    41021,
+    () =>
+      catFactory("Zoomie", interpolate(new Point(gameWidth / 2 + 50, 0), new Point(gameWidth / 2 + 50, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    41042,
+    () =>
+      catFactory("Zoomie", interpolate(new Point(gameWidth / 2 - 85, 0), new Point(gameWidth / 2 - 85, gameHeight)), 5),
+    20,
+  ),
+  ...timesInterval(
+    100,
+    41063,
+    () =>
+      catFactory("Zoomie", interpolate(new Point(gameWidth / 2 + 85, 0), new Point(gameWidth / 2 + 85, gameHeight)), 5),
+    20,
+  ),
   [42500, () => hideDangerElem("t")],
 
   ...boss(46000, true),

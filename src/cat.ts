@@ -102,8 +102,8 @@ export function init(texture: Texture[], route: CatRoute<Cat>, speed: number, ty
     cat.scale.y = 2;
     cat.loop = false;
   }
-  cat.x = app.renderer.width / 2;
-  cat.y = app.renderer.height / 2;
+  cat.x = -100;
+  cat.y = -100;
 
   cat.on("pointerdown", () => {
     playEvent("event:/meow");
