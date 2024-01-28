@@ -1,6 +1,6 @@
 import { Point, Sprite, Texture } from "pixi.js";
 import { playEvent } from "./fmod.ts";
-import { CatRoute, interpolate } from "./cat.ts";
+import { appear, CatRoute, hideDanger, interpolate, setPos, showDanger, stay } from "./cat.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
 export interface BigCat {
@@ -44,26 +44,6 @@ function fade(delta: number, cat: BigCat): Point {
   return cat.sprite.position;
 }
 
-const setPos = (pos: Point) => interpolate(pos, pos);
-function showDanger(danger: string): CatRoute<BigCat> {
-  return (_delta, cat) => {
-    document.getElementById("onscreen-" + danger)!.style.opacity = "0.75";
-    return cat.sprite.position;
-  };
-}
-function hideDanger(danger: string): CatRoute<BigCat> {
-  return (_delta, cat) => {
-    document.getElementById("onscreen-" + danger)!.style.opacity = "0";
-    return cat.sprite.position;
-  };
-}
-const stay: CatRoute<BigCat> = (_delta, cat) => cat.sprite.position;
-
-function appear(delta: number, cat: BigCat): Point {
-  cat.sprite.alpha = Math.max(0, delta * 1.5);
-  return cat.sprite.position;
-}
-
 const attacks: [number, [number, CatRoute<BigCat>][]][] = [
   [
     1,
@@ -71,11 +51,11 @@ const attacks: [number, [number, CatRoute<BigCat>][]][] = [
       [1, stay],
       [1, fade],
       [1, setPos(new Point(-500, gameHeight / 2))],
-      [0, showDanger("tl")],
+      //[0, showDanger("tl")],
       [1, showDanger("l")],
       [1, appear],
       [1, interpolate(new Point(-500, gameHeight / 2), new Point(gameWidth + 500, gameHeight / 2))],
-      [0, hideDanger("tl")],
+      //[0, hideDanger("tl")],
       [1, hideDanger("l")],
     ],
   ],

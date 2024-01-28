@@ -9,7 +9,7 @@ interface Ship {
 
 export function initShip(texture: Texture): Ship {
   const ship = new Sprite(texture);
-  ship.x = app.renderer.width / 2;
+  ship.x = gameWidth / 2;
   ship.y = app.renderer.height + ship.height;
 
   ship.on("pointerdown", () => {

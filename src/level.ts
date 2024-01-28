@@ -1,5 +1,5 @@
 import { Point } from "pixi.js";
-import { bezier, CatAssets, wobblyLine } from "./cat.ts";
+import { bezier, CatAssets, combine, hideDangerElem, interpolate, showDangerElem } from "./cat.ts";
 import { range } from "./util.ts";
 import { gameHeight, gameWidth } from "./const.ts";
 
@@ -12,18 +12,22 @@ export interface Level {
   events: LevelEvent[];
 }
 
-export function times5(offset: number, fn: () => void): LevelEvent[] {
-  return [...range(5)].map((n) => [offset + 500 * n, fn]);
+export function times(count: number, offset: number, fn: (n: number) => void): LevelEvent[] {
+  return [...range(count)].map((n) => [offset + 500 * n, () => fn(n)]);
+}
+
+export function times5(offset: number, fn: (n: number) => void): LevelEvent[] {
+  return times(5, offset, fn);
 }
 
 export function waveOf5(offset: number, ty: keyof CatAssets, from: Point, to: Point): LevelEvent[] {
-  return times5(offset, () => catFactory(ty, wobblyLine(from, to)));
+  return times5(offset, () => catFactory(ty, interpolate(from, to)));
 }
 
 const level1Story = `
   <h2 class="font-bold text-4xl">Hungry Cattos!</h2>
 
-  <p>The cats are hungry! move your hand with the arrow keys. Throw treats with the space bar. 
+  <p>The cats are hungry! move your hand with the arrow keys. Throw treats with the space bar.
   Don't let the cats hit you! They're not very nice when they're this hungry.</p>
 
   <p class="mt-2">Cats leave you alone and disappear when they're satiated.
@@ -39,7 +43,7 @@ const level1Story = `
 const level2Story = `
   <h2 class="font-bold text-4xl">Hunky Bulky Big Toms, Lumbering Chonkers and Zoomie Goblins</h2>
 
-  <p>Different kinds of cats take different amounts of treats to be satiated. 
+  <p>Different kinds of cats take different amounts of treats to be satiated.
   The grey Hunky Bulky Big Toms are a bit slower, but take more treats to be satiated.
   Don't feed the white Lumbering Chonkers! They're very slow, and they don't need to get slower.
   If you feed a Chonker, you lose a band-aid. It makes sense, I swear.
@@ -49,7 +53,7 @@ const level2Story = `
 const level3Story = `
   <h2 class="font-bold text-4xl">Masters of the Universe!</h2>
 
-  <p>We all know cats are the real bosses on earth. 
+  <p>We all know cats are the real bosses on earth.
   Not much of a stretch to find yout they rule the galaxy and the entire universe, too, right?</p>
 
   <p class="mt-2">New cats!
@@ -79,48 +83,92 @@ export const endingStory = `
 `;
 
 const level1Events: LevelEvent[] = [
-  ...waveOf5(1000, "Basic", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(3000, "Basic", new Point(gameWidth, 200), new Point(0, 200)),
-  ...waveOf5(6000, "Basic", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(6000, "Basic", new Point(gameWidth, 200), new Point(0, 200)),
+  ...waveOf5(1000, "Basic", new Point(100, 0), new Point(100, gameHeight)),
+  ...waveOf5(3000, "Basic", new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight)),
+  ...waveOf5(6000, "Basic", new Point(100, 0), new Point(gameWidth - 100, gameHeight)),
+  ...waveOf5(6100, "Basic", new Point(gameWidth - 100, 0), new Point(100, gameHeight)),
 
   ...times5(9000, () =>
     catFactory(
-      "Buff",
-      bezier(new Point(0, 200), new Point(350, 0), new Point(gameWidth, 300), new Point(0, gameHeight)),
+      "Basic",
+      bezier(new Point(0, 100), new Point(350, 0), new Point(gameWidth, 300), new Point(300, gameHeight)),
     ),
   ),
   ...times5(10250, () =>
     catFactory(
-      "Buff",
+      "Basic",
       bezier(
-        new Point(gameWidth, 200),
+        new Point(gameWidth, 100),
         new Point(gameWidth - 350, 0),
         new Point(0, 300),
-        new Point(gameWidth, gameHeight),
+        new Point(gameWidth - 300, gameHeight),
       ),
     ),
   ),
 
-  ...waveOf5(13000, "Zoomie", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(13600, "Zoomie", new Point(0, 200), new Point(gameWidth, 200)),
-  ...waveOf5(14200, "Zoomie", new Point(0, 300), new Point(gameWidth, 300)),
-  ...waveOf5(14800, "Zoomie", new Point(0, 400), new Point(gameWidth, 400)),
+  ...times(6, 12000, (n) => {
+    const x = 100 * n + 50;
+    catFactory("Basic", interpolate(new Point(x, 0), new Point(x, gameHeight)));
+    catFactory("Basic", interpolate(new Point(gameWidth - x, 0), new Point(gameWidth - x, gameHeight)));
+  }),
 
-  ...waveOf5(17000, "Zoomie", new Point(gameWidth, 100), new Point(0, 100)),
-  ...waveOf5(17600, "Zoomie", new Point(gameWidth, 200), new Point(0, 200)),
-  ...waveOf5(18200, "Zoomie", new Point(gameWidth, 300), new Point(0, 300)),
-  ...waveOf5(18800, "Zoomie", new Point(gameWidth, 400), new Point(0, 400)),
+  ...times(10, 15000, () =>
+    catFactory(
+      "Basic",
+      combine(
+        [1, interpolate(new Point(100, 0), new Point(100, gameHeight - 200))],
+        [
+          2,
+          bezier(
+            new Point(100, gameHeight - 200),
+            new Point(gameWidth - 100, gameHeight - 200),
+            new Point(gameWidth - 100, 0),
+          ),
+        ],
+      ),
+    ),
+  ),
 
-  ...waveOf5(22000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(27000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(32000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(37000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(42000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
-  ...waveOf5(47000, "Chungus", new Point(0, 100), new Point(gameWidth, 100)),
+  ...times(10, 20000, () =>
+    catFactory(
+      "Basic",
+      combine(
+        [1, interpolate(new Point(gameWidth - 100, 0), new Point(gameWidth - 100, gameHeight - 200))],
+        [2, bezier(new Point(gameWidth - 100, gameHeight - 200), new Point(100, gameHeight - 200), new Point(100, 0))],
+      ),
+    ),
+  ),
+
+  [24500, () => showDangerElem("bl")],
+  ...waveOf5(25500, "Basic", new Point(100, gameHeight), new Point(100, 0)),
+  [27000, () => hideDangerElem("bl")],
+
+  [27000, () => showDangerElem("br")],
+  ...waveOf5(28000, "Basic", new Point(gameWidth - 100, gameHeight), new Point(gameWidth - 100, 0)),
+  [30500, () => hideDangerElem("br")],
+
+  ...waveOf5(33000, "Basic", new Point(0, 100), new Point(gameWidth, 100)),
+  ...waveOf5(33600, "Basic", new Point(0, 200), new Point(gameWidth, 200)),
+  ...waveOf5(34200, "Basic", new Point(0, 300), new Point(gameWidth, 300)),
+  ...waveOf5(34800, "Basic", new Point(0, 400), new Point(gameWidth, 400)),
+
+  ...waveOf5(37000, "Basic", new Point(gameWidth, 100), new Point(0, 100)),
+  ...waveOf5(37600, "Basic", new Point(gameWidth, 200), new Point(0, 200)),
+  ...waveOf5(38200, "Basic", new Point(gameWidth, 300), new Point(0, 300)),
+  ...waveOf5(38800, "Basic", new Point(gameWidth, 400), new Point(0, 400)),
+
+  [46000, () => showDangerElem("large-enemy")],
+  [49500, () => hideDangerElem("large-enemy")],
+
+  [49000, () => showDangerElem("tl")],
+  [49000, () => showDangerElem("t")],
+  [49000, () => showDangerElem("tr")],
 
   [50000, () => bigCat()],
-  //[1000, () => bigCat()],
+
+  [51000, () => hideDangerElem("tl")],
+  [51000, () => hideDangerElem("t")],
+  [51000, () => hideDangerElem("tr")],
 ];
 level1Events.sort((a, b) => a[0] - b[0]);
 

@@ -13,30 +13,30 @@
         class="absolute w-full h-full flex flex-col opacity-75 text-[100px] justify-between leading-none pointer-events-none"
       >
         <div class="flex w-full h-full justify-between items-start">
-          <div id="onscreen-tl" class="opacity-75 overflow-hidden" style="opacity: 0">
+          <div id="onscreen-tl" class="overflow-hidden" style="opacity: 0">
             <span class="bg-yellow-500">!!!</span>
           </div>
-          <div id="onscreen-t" class="opacity-75 overflow-hidden" style="opacity: 0">
+          <div id="onscreen-t" class="overflow-hidden" style="opacity: 0">
             <span class="bg-yellow-500">!!!</span>
           </div>
-          <div id="onscreen-tr" class="opacity-75 overflow-hidden" style="opacity: 0">
+          <div id="onscreen-tr" class="overflow-hidden" style="opacity: 0">
             <span class="bg-yellow-500">!!!</span>
           </div>
         </div>
-        <div class="flex w-full h-full justify-between items-end" style="opacity: 0">
-          <div id="onscreen-bl" class="opacity-75 overflow-hidden">
+        <div class="flex w-full h-full justify-between items-end">
+          <div id="onscreen-bl" class="overflow-hidden" style="opacity: 0">
             <span class="bg-yellow-500">!!!</span>
           </div>
-          <div id="onscreen-b" class="opacity-75 overflow-hidden" style="opacity: 0">
+          <div id="onscreen-b" class="overflow-hidden" style="opacity: 0">
             <span class="bg-yellow-500">!!!</span>
           </div>
-          <div id="onscreen-br" class="opacity-75 overflow-hidden" style="opacity: 0">
+          <div id="onscreen-br" class="overflow-hidden" style="opacity: 0">
             <span class="bg-yellow-500">!!!</span>
           </div>
         </div>
       </div>
 
-      <div class="absolute w-full h-full flex opacity-75 text-[100px] justify-between leading-none pointer-events-none">
+      <div class="absolute w-full h-full flex text-[100px] justify-between leading-none pointer-events-none">
         <div class="flex flex-col h-full w-full justify-between items-start">
           <div id="onscreen-lt" class="overflow-hidden" style="opacity: 0">
             <span class="bg-yellow-500">!</span>
@@ -60,7 +60,19 @@
           </div>
         </div>
       </div>
+
+      <div
+        id="onscreen-large-enemy"
+        class="flex-col absolute w-full h-full flex text-[50px] justify-between items-center leading-none pointer-events-none"
+        style="opacity: 0"
+      >
+        <div></div>
+        <div></div>
+        <div class="bg-yellow-200 bg-opacity-40 text-center">Large enemy approaching</div>
+        <div></div>
+      </div>
     </div>
+
     <div id="loader" class="flex flex-col justify-center items-center p-4 bg-blue-700 rounded shadow text-2xl w-5/6">
       <h1 class="text-4xl font-bold underline">Cat Feeding Game</h1>
       <p class="sr-only">The interactive content is probably not accessible.</p>
