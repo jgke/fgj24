@@ -81,7 +81,7 @@ const level3Story = `
   Not much of a stretch to find yout they rule the galaxy and the entire universe, too, right?</p>
 
   <p class="mt-2">New cats!<br>
-  The Spotted Hissy Fits run straight towards you! Luckily they only take one treat to be satiated.<br>
+  The Spotted Hissy Fits run even faster! Luckily they only take one treat to be satiated.<br>
   Ceilingcats peek from the fabric of reality itself for only a few seconds!<br>
   Feed them before they disappear again!</p>
 `;
